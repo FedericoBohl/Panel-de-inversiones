@@ -37,7 +37,7 @@ def calcular_proffit_acciones():
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
         return profit_acciones
-with st.sidebar.form('Login'):
+with st.form('Login'):
     st.sidebar.text_input('Usuario',key='username')
     st.sidebar.text_input('Contraseña',key='password',type='password')
     st.sidebar.form_submit_button('Iniciar Sesion')
