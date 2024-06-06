@@ -29,4 +29,6 @@ try:
         S.cedears_now=iol.get_quotes('CEDEARs','argentina')
         S.titpub=iol.get_quotes('titulosPublicos','argentina')
     st.dataframe(S.acciones_now)
+    st.divider()
+    load_operaciones()
 except:pass
