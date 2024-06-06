@@ -43,6 +43,7 @@ st.sidebar.text_input('Contraseña',key='password',type='password')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if True:
+    st.write(S.username,S.password)
     iol=load_user_IOL(S.username,S.password)
     if (st.button('Recargar Datos')) or not ('acciones_now' in S):
         S.acciones_now=iol.get_quotes('Acciones','argentina')
