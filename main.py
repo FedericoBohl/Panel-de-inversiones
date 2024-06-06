@@ -19,10 +19,30 @@ def load_user_IOL(username,password):
     token_manager = TokenManager(username,password)
     return token_manager
 
+def calcular_proffit_acciones():
+    his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
+    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
+    profit_acciones['Cantidad']=0
+    profit_acciones['Monto']=0
+    profit_acciones['Ganancia']=0
+    profit_acciones['Ganancia Real']=0
+    for i in range(len(his_acciones.index)):
+        row=his_op.iloc[i]
+        if row['Tipo Transacción']=='Compra':
+            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+        else:
+            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+        return profit_acciones
+
 st.sidebar.text_input('Usuario',key='username')
 st.sidebar.text_input('Contraseña',key='password',type='password')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
-try:
+#try:
+if True:
     iol=load_user_IOL(S.username,S.password)
     if (st.button('Recargar Datos')) or not ('acciones_now' in S):
         S.acciones_now=iol.get_quotes('Acciones','argentina')
@@ -32,7 +52,23 @@ try:
     his_op=load_operaciones()
     st.write(his_op)
     st.divider()
+    _=calcular_proffit_acciones()
+    st.dataframe(_)
 
-except:pass
+#except:pass
 
-st.write(his_op.index)
+#his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
+#his_cedears=his_op[his_op['Tipo de Acción']=='Cedear']
+
+#profit_bonos=pd.DataFrame(index=his_bonos['Simbolo'].unique())
+#profit_bonos['Cantidad']=0
+#profit_bonos['Monto']=0
+#profit_bonos['Ganancia']=0
+#profit_bonos['Ganancia Real']=0
+
+#profit_cedears=pd.DataFrame(index=his_cedears['Simbolo'].unique())
+#profit_cedears['Cantidad']=0
+#profit_cedears['Monto']=0
+#profit_cedears['Ganancia']=0
+#profit_cedears['Ganancia Real']=0
+
