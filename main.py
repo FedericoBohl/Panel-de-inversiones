@@ -42,15 +42,17 @@ with st.sidebar:
         st.text_input('Usuario',key='username')
         st.text_input('Contraseña',key='password',type='password')
         st.form_submit_button('Iniciar Sesion',type='primary')
+    try:
+        S.iol=load_user_IOL(S.username,S.password)
+    except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
-if 'password' in S:
+if 'iol' in S:
     try:
-        iol=load_user_IOL(S.username,S.password)
         if (not ('acciones_now' in S)) or (st.button('Recargar Datos')):
-            S.acciones_now=iol.get_quotes('Acciones','argentina')
-            S.cedears_now=iol.get_quotes('CEDEARs','argentina')
-            S.titpub=iol.get_quotes('titulosPublicos','argentina')
+            S.acciones_now=S.iol.get_quotes('Acciones','argentina')
+            S.cedears_now=S.iol.get_quotes('CEDEARs','argentina')
+            S.titpub=S.iol.get_quotes('titulosPublicos','argentina')
         st.dataframe(S.acciones_now)
         his_op=load_operaciones()
         st.write(his_op)
