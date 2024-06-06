@@ -24,12 +24,15 @@ st.sidebar.text_input('Contraseña',key='password',type='password')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 try:
     iol=load_user_IOL(S.username,S.password)
-    if (st.button('Recargar Datos')) or not ('_datosiol_' in S):
+    if (st.button('Recargar Datos')) or not ('acciones_now' in S):
         S.acciones_now=iol.get_quotes('Acciones','argentina')
         S.cedears_now=iol.get_quotes('CEDEARs','argentina')
         S.titpub=iol.get_quotes('titulosPublicos','argentina')
     st.dataframe(S.acciones_now)
-    st.divider()
     his_op=load_operaciones()
     st.write(his_op)
+    st.divider()
+
 except:pass
+
+st.write(his_op.index)
