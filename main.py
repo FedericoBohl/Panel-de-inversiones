@@ -22,6 +22,7 @@ def load_user_IOL(username,password):
 st.sidebar.text_input('Usuario',key='username')
 st.sidebar.text_input('Contraseña',key='password',type='password')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
+load_operaciones()
 try:
     iol=load_user_IOL(S.username,S.password)
     if (st.button('Recargar Datos')) or not ('_datosiol_' in S):
