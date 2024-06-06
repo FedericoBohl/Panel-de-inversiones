@@ -14,6 +14,7 @@ class TokenManager:
         self.base_url = 'https://api.invertironline.com/api/v2'
         self.portfolio_url = f'{self.base_url}/portafolio'
         self.quotes_url = f'{self.base_url}/Cotizaciones/{{instrument}}/{{country}}/Todos'
+        self.get_new_token()
 
     def load_user_data(self):
         self.username = self.user_data['username']
@@ -46,7 +47,7 @@ class TokenManager:
         self.token_info['expires_at'] = datetime.now() + timedelta(seconds=self.token_info['expires_in'])
 
     def ensure_token(self):
-        if not self.token_info or datetime.now() >= self.token_info['expires_at']:
+        if (not self.token_info) or (datetime.now() >= self.token_info['expires_at']):
             self.refresh_token() if self.token_info else self.get_new_token()
 
     def get_portfolio(self):
