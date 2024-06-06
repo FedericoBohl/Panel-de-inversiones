@@ -40,10 +40,8 @@ def make_acciones(data_now : pd.DataFrame):
     #data_merv['Var%']=data_merv["Var%"]*100
     data_gen=data[data['Merv']==False]
     data_gen=pd.merge(data_now,data_gen,on='simbolo').dropna()
-    st.dataframe(data_merv)
     #-------------- Fig del Merval  --------------
     df_grouped = data_merv.groupby(["Sector","simbolo"])[["CAP (MM)","Var%","Nombre Completo","ultimoPrecio"]].min().reset_index()
-    st.dataframe(df_grouped)
     fig_merv = px.treemap(df_grouped, 
                     path=[px.Constant("Bolsa Argentina"), 'Sector',  'simbolo'],
                     values='CAP (MM)',
@@ -120,6 +118,8 @@ if 'iol' in S:
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
+            fig,_=make_acciones(data_now=S.acciones_now)
+            st.plotly_chart(fig,use_container_width=True)
         #his_op=load_operaciones()
         #st.write(his_op)
         #st.divider()
@@ -142,6 +142,3 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Monto']=0
 #profit_cedears['Ganancia']=0
 #profit_cedears['Ganancia Real']=0
-
-fig,_=make_acciones(data_now=S.acciones_now)
-st.plotly_chart(fig)
