@@ -146,7 +146,7 @@ data_now=S.acciones_now.copy()
 data=pd.read_csv('data_bolsa/bolsa_arg.csv',delimiter=';')
 data_merv=data[data['Merv']==True]
 data_merv=pd.merge(data_now,data_merv,on='simbolo').dropna()
-data_merv['Var%']=data_merv["Var%"]*100
+data_merv['variacionPorcentual']=data_merv["variacionPorcentual"]*100
 data_gen=data[data['Merv']==False]
 data_gen=pd.merge(data_now,data_gen,on='simbolo').dropna()
 
