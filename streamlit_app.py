@@ -142,6 +142,6 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Monto']=0
 #profit_cedears['Ganancia']=0
 #profit_cedears['Ganancia Real']=0
-data_now=S.acciones_now.copy()
-fig,_=make_acciones(data_now=data_now)
+
+fig,_=make_acciones(data_now=S.acciones_now)
 st.plotly_chart(fig)
