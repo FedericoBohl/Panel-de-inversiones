@@ -72,5 +72,6 @@ class TokenManager:
             except: raise Exception(f"Error fetching {instrument} quotes: {response.text}")
         df=pd.DataFrame(response.json()['titulos'])
         df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
+        df=df.rename(columns={'variacionPorcentual':'Var%'})
         #df.set_index('simbolo',inplace=True)
         return df
