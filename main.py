@@ -44,20 +44,21 @@ with st.sidebar:
         st.form_submit_button('Iniciar Sesion',type='primary')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
-if True:
-    iol=load_user_IOL(S.username,S.password)
-    if (st.button('Recargar Datos')) or not ('acciones_now' in S):
-        S.acciones_now=iol.get_quotes('Acciones','argentina')
-        S.cedears_now=iol.get_quotes('CEDEARs','argentina')
-        S.titpub=iol.get_quotes('titulosPublicos','argentina')
-    st.dataframe(S.acciones_now)
-    his_op=load_operaciones()
-    st.write(his_op)
-    st.divider()
-    _=calcular_proffit_acciones()
-    st.dataframe(_)
-
-#except:pass
+if 'password' in S:
+    try:
+        iol=load_user_IOL(S.username,S.password)
+        if (not ('acciones_now' in S)) or (st.button('Recargar Datos')):
+            S.acciones_now=iol.get_quotes('Acciones','argentina')
+            S.cedears_now=iol.get_quotes('CEDEARs','argentina')
+            S.titpub=iol.get_quotes('titulosPublicos','argentina')
+        st.dataframe(S.acciones_now)
+        his_op=load_operaciones()
+        st.write(his_op)
+        st.divider()
+        _=calcular_proffit_acciones()
+        st.dataframe(_)
+    except:pass
+st.warning('Antes que nada...Iniciar Sesion')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
 #his_cedears=his_op[his_op['Tipo de Acción']=='Cedear']
