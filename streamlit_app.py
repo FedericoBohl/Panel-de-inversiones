@@ -40,7 +40,7 @@ def make_acciones(data_now : pd.DataFrame):
     data_merv['variacionPorcentual']=data_merv["variacionPorcentual"]#*100
     data_gen=data[data['Merv']==False]
     data_gen=pd.merge(data_now,data_gen,on='simbolo').dropna()
-
+    st.dataframe(data_merv)
     #-------------- Fig del Merval  --------------
     df_grouped = data_merv.groupby(["Sector","Nombre Completo"])[["CAP (MM)","variacionPorcentual","Nombre Completo","ultimoPrecio"]].min().reset_index()
     fig_merv = px.treemap(df_grouped, 
