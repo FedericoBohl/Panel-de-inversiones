@@ -128,7 +128,7 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 def calcular_proffit_acciones(his_op):
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
-    profit_acciones=pd.DataFrame(index=his_acciones['simbolo'].unique())
+    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
     profit_acciones['Ganancia']=0
@@ -136,15 +136,15 @@ def calcular_proffit_acciones(his_op):
     for i in range(len(his_acciones.index)):
         row=his_op.iloc[i]
         if row['Tipo Transacción']=='Compra':
-            profit_acciones.at[row['simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
         else:
-            profit_acciones.at[row['simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
         return profit_acciones
 his_op=load_operaciones()
 st.write(his_op)
-his_op=his_op.set_index('simbolo',inplace=True)
+his_op=his_op.set_index('Simbolo',inplace=True)
 st.write(calcular_proffit_acciones(his_op))
