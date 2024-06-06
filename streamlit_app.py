@@ -45,11 +45,11 @@ def make_acciones(data_now : pd.DataFrame):
     df_grouped = data_merv.groupby(["Sector","simbolo"])[["CAP (MM)","variacionPorcentual","Nombre Completo","ultimoPrecio"]].min().reset_index()
     st.dataframe(df_grouped)
     fig_merv = px.treemap(df_grouped, 
-                    path=[px.Constant("Bolsa Argentina"), 'Sector',  'simbolo'], #Quite 'Industria', en 3
+                    path=[px.Constant("Bolsa Argentina"), 'Sector',  'simbolo'],
                     values='CAP (MM)',
                     hover_name="variacionPorcentual",
                     custom_data=["Nombre Completo",'ultimoPrecio',"variacionPorcentual"],
-                    color='variacionPorcentual', 
+                    color='Var%', 
                     range_color =[-6,6],color_continuous_scale=colorscale,
                     labels={'Value': 'Number of Items'},
                     color_continuous_midpoint=0)
