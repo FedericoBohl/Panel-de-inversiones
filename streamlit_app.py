@@ -43,6 +43,7 @@ def make_acciones(data_now : pd.DataFrame):
     st.dataframe(data_merv)
     #-------------- Fig del Merval  --------------
     df_grouped = data_merv.groupby(["Sector","Nombre Completo"])[["CAP (MM)","variacionPorcentual","Nombre Completo","ultimoPrecio"]].min().reset_index()
+    st.dataframe(df_grouped)
     fig_merv = px.treemap(df_grouped, 
                     path=[px.Constant("Bolsa Argentina"), 'Sector',  'Nombre Completo'], #Quite 'Industria', en 3
                     values='CAP (MM)',
