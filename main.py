@@ -9,14 +9,19 @@ import plotly.express as px
 
 from IOL import TokenManager
 
+@st.cache_resource(show_spinner=False)
+def load_operaciones(path='Operaciones.xlsx'):
+    df=pd.read_excel(path)
+    st.write(df)
 
 @st.cache_data(show_spinner=False)
 def load_user_IOL(username,password):
     token_manager = TokenManager(username,password)
     return token_manager
 
-st.text_input('Usuario',key='username')
-st.text_input('Contraseña',key='password')
+st.sidebar.text_input('Usuario',key='username')
+st.sidebar.text_input('Contraseña',key='password',type='password')
+st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 try:
     iol=load_user_IOL(S.username,S.password)
     if (st.button('Recargar Datos')) or not ('_datosiol_' in S):
