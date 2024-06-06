@@ -58,7 +58,7 @@ if 'password' in S:
         _=calcular_proffit_acciones()
         st.dataframe(_)
     except:pass
-st.warning('Antes que nada...Iniciar Sesion')
+else:st.warning('Antes que nada...Iniciar Sesion')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
 #his_cedears=his_op[his_op['Tipo de Acción']=='Cedear']
