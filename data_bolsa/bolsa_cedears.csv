@@ -1,0 +1,75 @@
+Sector;Nombre Completo;Name;Weigths;Nombre
+Tecnologia;Microsoft Corp;MSFT;0.07079993;MSFT
+Tecnologia;Apple Inc.;AAPL;0.06212048;AAPL
+Tecnologia;Nvidia Corp;NVDA;0.05244402;NVDA
+Consumo Ciclico;Amazon.com Inc;AMZN;0.0375839;AMZN
+Servicios de Comunicacion;Alphabet Inc. Class A;GOOGL;0.02335584;GOOGL
+Servicios de Comunicacion;Meta Platforms, Inc. Class A;META;0.02310675;META
+Servicios de Comunicacion;Alphabet Inc. Class C;GOOG;0.01972429;GOOGL
+Servicios Financieros;Berkshire Hathaway Class B;BRK.B;0.01682826;BRKB
+Salud;Eli Lilly & Co.;LLY;0.01398605;LLY
+Tecnologia;Broadcom Inc.;AVGO;0.01394278;AVGO
+Servicios Financieros;Jpmorgan Chase & Co.;JPM;0.01266243;JPM
+Energia;Exxon Mobil Corporation;XOM;0.01199842;XOM
+Consumo Ciclico;Tesla, Inc.;TSLA;0.01086377;TSLA
+Salud;Unitedhealth Group Incorporated;UNH;0.01071381;UNH
+Servicios Financieros;Visa Inc.;V;0.00987292;V
+Consumo Defensivo;Procter & Gamble Company;PG;0.00881922;PG
+Servicios Financieros;Mastercard Incorporated;MA;0.00849908;MA
+Salud;Johnson & Johnson;JNJ;0.0081559;JNJ
+Consumo Defensivo;Costco Wholesale Corp;COST;0.0078857;COST
+Consumo Ciclico;Home Depot, Inc.;HD;0.0075351;HD
+Salud;Merck & Co., Inc.;MRK;0.00743417;MRK
+Salud;Abbvie Inc.;ABBV;0.00650679;ABBV
+Energia;Chevron Corporation;CVX;0.00626372;CVX
+Tecnologia;Salesforce, Inc.;CRM;0.00622769;CRM
+Servicios de Comunicacion;Netflix Inc;NFLX;0.00621519;NFLX
+Consumo Defensivo;Walmart Inc.;WMT;0.00615169;WMT
+Tecnologia;Advanced Micro Devices;AMD;0.00601892;AMD
+Servicios Financieros;Bank of America Corporation;BAC;0.00598616;BAC
+Consumo Defensivo;Pepsico, Inc.;PEP;0.00555239;PEP
+Consumo Defensivo;Coca-Cola Company;KO;0.00545294;KO
+Salud;Thermo Fisher Scientific, Inc.;TMO;0.00513947;TMO
+Tecnologia;Qualcomm Inc;QCOM;0.0049301;QCOM
+Tecnologia;Adobe Inc.;ADBE;0.0049097;ADBE
+Servicios Financieros;Wells Fargo & Co.;WFC;0.00489574;WFC
+Tecnologia;Oracle Corp;ORCL;0.00444934;ORCL
+Consumo Ciclico;Mcdonald's Corporation;MCD;0.00435169;MCD
+Tecnologia;Accenture Plc;ACN;0.004297;ACN
+Tecnologia;Cisco Systems, Inc.;CSCO;0.00429196;CSCO
+Servicios de Comunicacion;The Walt Disney Company;DIS;0.0042177;DISN
+Industria;Caterpillar Inc.;CAT;0.00414153;CAT
+Tecnologia;Applied Materials Inc;AMAT;0.00410158;AMAT
+Tecnologia;Texas Instruments Incorporated;TXN;0.00405201;TXN
+Salud;Abbott Laboratories;ABT;0.00401192;ABT
+Industria;General Electric Company;GE;0.00388274;GE
+Servicios de Comunicacion;Verizon Communications;VZ;0.00377767;VZ
+Salud;Amgen Inc;AMGN;0.0037705;AMGN
+Salud;Pfizer Inc.;PFE;0.00360794;PFE
+Tecnologia;Servicenow, Inc.;NOW;0.00355703;SNOW
+Tecnologia;International Business Machines Corporation;IBM;0.00348448;IBM
+Consumo Defensivo;Philip Morris International Inc.;PM;0.00346267;PM
+Servicios Financieros;Goldman Sachs Group Inc.;GS;0.00338124;GS
+Industria;Union Pacific Corp.;UNP;0.00332632;UNP
+Tecnologia;Micron Technology, Inc.;MU;0.00319143;MU
+Servicios Financieros;S&p Global Inc.;SPGI;0.00315222;SPGI
+Industria;Rtx Corporation;RTX;0.00312285;RTX
+Servicios Financieros;American Express Company;AXP;0.00310498;AXP
+Tecnologia;Intel Corp;INTC;0.00304162;INTC
+Industria;Honeywell International, Inc.;HON;0.00302125;HON
+Tecnologia;Uber Technologies, Inc.;UBER;0.00297978;UBER
+Consumo Ciclico;Booking Holdings Inc.;BKNG;0.00294622;BKNG
+Servicios de Comunicacion;At&t Inc.;T;0.00280562;T
+Tecnologia;Lam Research Corp;LRCX;0.002768;LRCX
+Servicios Financieros;Citigroup Inc.;C;0.00269382;C
+Servicios Financieros;The Charles Schwab Corporation;SCHW;0.00262229;SCHW
+Salud;Medtronic Plc;MDT;0.00251835;MDT
+Consumo Ciclico;Nike, Inc.;NKE;0.00250345;NKE
+Tecnologia;Analog Devices, Inc.;ADI;0.00241568;ADI
+Industria;Boeing Company;BA;0.00239831;BA
+Industria;Automatic Data Processing;ADP;0.00231939;ADP
+Servicios Financieros;Marsh & Mclennan Companies, Inc.;MMC;0.00230986;MMC
+Tecnologia;Palo Alto Networks, Inc.;PANW;0.00228779;PANW
+Industria;Deere & Company;DE;0.00228451;DE
+Industria;Lockheed Martin Corp.;LMT;0.00225141;LMT
+Consumo Defensivo;Mondelez International, Inc. Class A;MDLZ;0.00212047;MDLZ

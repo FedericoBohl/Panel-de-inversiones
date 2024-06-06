@@ -1,0 +1,61 @@
+﻿Merv;simbolo;CAP (MM);Sector;Nombre Completo
+True;BBAR;1320;Financiero;BBVA Banco Frances
+True;BMA;2380;Financiero;Banco Macro
+True;BYMA;773.94;Financiero;Bolsas y Mercados Argentinos
+True;CEPU;1400;Suministros;Central Puerto
+True;COME;346.21;Energía;Comercial del Plata
+True;CRES;537.68;Consumo no cíclico;Cresud
+False;CVH;762.31;Tecnología;Cablevisión
+True;EDN;933.39;Suministros;Edenor
+True;GGAL;3390;Financiero;Grupo Financiero Galicia
+False;HARG;449.5;Materiales básicos;Holcim Argentina
+False;LOMA;167.11;Materiales básicos;Loma Negra
+True;MIRG;2300;Tecnología;Mirgor
+True;PAMP;2560;Suministros;Pampa Energía
+True;SUPV;435.33;Financiero;Grupo Supervielle S.A.
+True;TGNO4;798.78;Suministros;Trans. Gas Norte
+True;TGSU2;2180;Energía;Trans. Gas Sur
+True;TRAN;598.09;Suministros;Transener
+True;TXAR;3620;Materiales básicos;Ternium Argentina
+True;VALO;215.25;Financiero;Banco de Valores
+True;YPFD;7390;Energía;YPF
+True;ALUA;2330;Materiales básicos;Aluar
+False;AGRO;62.64;Industriales;Agrometal
+False;AUSO;215.66;Industriales;Autopistas del Sol
+False;BHIP;247.27;Financiero;Banco Hipotecario
+False;BOLT;171.72;Industriales;Boldt
+False;BPAT;529.29;Financiero;Banco Patagonia
+False;CADO;67.76;Consumo no cíclico;Carlos Casado
+False;CAPX;928.68;Energía;Capex
+False;CARC;32.2;Materiales básicos;Carboclor
+False;CELU;6840;Materiales básicos;Celulosa Argentina
+False;CTIO;633.31;Inmobiliaria;Consultatio
+False;DOME;9.35;Consumo cíclico;Artefactos Domesticos
+False;DYCA;19.83;Industriales;Dycasa
+False;EDLH;1.68;Suministros;EDESAL
+False;FERR;907.23;Consumo cíclico;Ferrum
+False;FIPL;37.28;Materiales básicos;Fiplasto SA
+False;GBAN;315.77;Suministros;Naturgy BAN
+False;GCDI;28.19;Inmobiliaria;GCDI
+False;GCLA;166.57;Consumo cíclico;Grupo clarin
+False;GRIM;42.09;Consumo cíclico;Grimoldi
+False;INAG;5.94;Materiales básicos;Insumos Agroquimicos
+False;INTR;30.27;Consumo no cíclico;Compania Introductora de BA
+False;INVJ;290.2;Consumo no cíclico;Inversora Juramento
+True;IRSA;680.91;Inmobiliaria;IRSA
+False;LEDE;369.8;Consumo no cíclico;Ledesma
+False;LONG;15.51;Consumo cíclico;Longvie
+False;METR;457.61;Suministros;Metrogas SA
+False;MOLA;1030;Consumo no cíclico;Molinos Agro
+False;MOLI;600.42;Consumo no cíclico;Molinos
+False;MORI;38.06;Consumo no cíclico;Morixe Hermanos
+False;MTR;161.54;Financiero;Matba Rofex
+False;OEST;153.12;Industriales;GCO
+False;PATA;460;Consumo no cíclico;SAIEP
+False;PGR;29.6;Energía;Phoenix Resources
+False;POLL;3.66;Industriales;Polledo
+False;RICH;73.16;Salud;Laboratorios Richmond
+False;RIGO;142.16;Materiales básicos;Rigolleau
+False;SAMI;727.16;Consumo no cíclico;San Miguel
+False;SEMI;57.07;Consumo no cíclico;Molinos Juan Semino
+True;TECO2;3630;Tecnología;Telecom Argentina S.A.
