@@ -9,6 +9,11 @@ import plotly.express as px
 import openpyxl
 
 from IOL import TokenManager
+st.set_page_config(
+    page_title="Portafolio IOL",
+    page_icon="logo.jpg",
+    layout="wide",
+    initial_sidebar_state="expanded")
 
 def load_operaciones(path='Operaciones.xlsx'):
     df=pd.read_excel(path)
