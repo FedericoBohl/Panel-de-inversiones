@@ -65,4 +65,6 @@ class TokenManager:
         if response.status_code != 200:
             raise Exception(f"Error fetching {instrument} quotes: {response.text}")
         df=pd.DataFrame(response.json()['titulos'])
-        return df[['simbolo','ultimoPrecio']]
+        df=df[['simbolo','ultimoPrecio']]
+        df=df.set_index('simbolo',inplace=True)
+        return df
