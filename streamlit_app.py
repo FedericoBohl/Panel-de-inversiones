@@ -47,7 +47,7 @@ def make_acciones(data_now : pd.DataFrame):
     fig_merv = px.treemap(df_grouped, 
                     path=[px.Constant("Bolsa Argentina"), 'Sector',  'simbolo'], #Quite 'Industria', en 3
                     values='CAP (MM)',
-                    hover_name="Var%",
+                    hover_name="variacionPorcentual",
                     custom_data=["Nombre Completo",'ultimoPrecio',"variacionPorcentual"],
                     color='variacionPorcentual', 
                     range_color =[-6,6],color_continuous_scale=colorscale,
