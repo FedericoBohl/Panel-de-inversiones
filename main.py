@@ -30,5 +30,6 @@ try:
         S.titpub=iol.get_quotes('titulosPublicos','argentina')
     st.dataframe(S.acciones_now)
     st.divider()
-    load_operaciones()
+    his_op=load_operaciones()
+    st.write(his_op)
 except:pass
