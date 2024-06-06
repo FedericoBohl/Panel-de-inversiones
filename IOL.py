@@ -71,6 +71,6 @@ class TokenManager:
                     raise Exception(f"Error fetching {instrument} quotes: {response.text}")
             except: raise Exception(f"Error fetching {instrument} quotes: {response.text}")
         df=pd.DataFrame(response.json()['titulos'])
-        df=df[['simbolo','ultimoPrecio']]
-        df.set_index('simbolo',inplace=True)
+        df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
+        #df.set_index('simbolo',inplace=True)
         return df
