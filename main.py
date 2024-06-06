@@ -10,7 +10,6 @@ import openpyxl
 
 from IOL import TokenManager
 
-@st.cache_resource(show_spinner=False)
 def load_operaciones(path='Operaciones.xlsx'):
     df=pd.read_excel(path)
     st.write(df)
