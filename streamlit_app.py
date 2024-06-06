@@ -42,7 +42,7 @@ def make_acciones(data_now : pd.DataFrame):
     data_gen=pd.merge(data_now,data_gen,on='simbolo').dropna()
     st.dataframe(data_merv)
     #-------------- Fig del Merval  --------------
-    df_grouped = data_merv.groupby(["Sector","Nombre Completo"])[["CAP (MM)","variacionPorcentual","Nombre Completo","ultimoPrecio"]]#.min().reset_index()
+    df_grouped = data_merv.groupby(["Sector","Nombre Completo"])[["CAP (MM)","variacionPorcentual","Nombre Completo","ultimoPrecio"]].min()#.reset_index()
     st.dataframe(df_grouped)
     fig_merv = px.treemap(df_grouped, 
                     path=[px.Constant("Bolsa Argentina"), 'Sector',  'Nombre Completo'], #Quite 'Industria', en 3
