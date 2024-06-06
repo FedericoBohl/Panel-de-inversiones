@@ -52,6 +52,8 @@ with st.sidebar:
         S.iol.get_new_token()
     except:pass
 st.write(S.iol)
+df=S.iol.get_quotes('Acciones','argentina')
+st.write(df)
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if 'iol' in S:
