@@ -129,6 +129,7 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 def calcular_proffit_acciones(his_op):
     _now:pd.DataFrame=S.acciones_now.copy()
     _now=_now.set_index('simbolo',inplace=True)
+    st.write(_now.iloc['AGRO'])
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
