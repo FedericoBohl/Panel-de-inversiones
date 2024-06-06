@@ -83,24 +83,6 @@ def make_acciones(data_now : pd.DataFrame):
     #fig_gen.update_layout(margin=dict(l=1, r=1, t=10, b=1))
     return fig_merv,None#,fig_gen
 
-def calcular_proffit_acciones():
-    his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
-    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
-    profit_acciones['Cantidad']=0
-    profit_acciones['Monto']=0
-    profit_acciones['Ganancia']=0
-    profit_acciones['Ganancia Real']=0
-    for i in range(len(his_acciones.index)):
-        row=his_op.iloc[i]
-        if row['Tipo Transacción']=='Compra':
-            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
-        else:
-            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
-        return profit_acciones
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -143,3 +125,24 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Monto']=0
 #profit_cedears['Ganancia']=0
 #profit_cedears['Ganancia Real']=0
+
+def calcular_proffit_acciones(his_op):
+    his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
+    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
+    profit_acciones['Cantidad']=0
+    profit_acciones['Monto']=0
+    profit_acciones['Ganancia']=0
+    profit_acciones['Ganancia Real']=0
+    for i in range(len(his_acciones.index)):
+        row=his_op.iloc[i]
+        if row['Tipo Transacción']=='Compra':
+            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+        else:
+            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
+        return profit_acciones
+
+st.write(calcular_proffit_acciones(his_op=load_operaciones()))
