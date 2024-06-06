@@ -49,6 +49,7 @@ with st.sidebar:
         st.form_submit_button('Iniciar Sesion',type='primary')
     try:
         S.iol=load_user_IOL(S.username,S.password)
+        S.iol.get_new_token()
     except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
