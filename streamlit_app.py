@@ -135,6 +135,7 @@ def calcular_proffit_acciones(his_op):
     profit_acciones['Ganancia Real']=0
     for i in range(len(his_op.index)):
         row=his_op.iloc[i]
+        st.write(row)
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
@@ -145,6 +146,7 @@ def calcular_proffit_acciones(his_op):
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
         return profit_acciones
 his_op=load_operaciones()
+st.write(S.acciones_now)
 st.write(his_op)
 st.write(calcular_proffit_acciones(his_op))
 
