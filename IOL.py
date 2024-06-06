@@ -58,14 +58,19 @@ class TokenManager:
             raise Exception(f"Error fetching portfolio: {response.text}")
         return response.json()
 
-    def get_quotes(self, instrument, country):
+    def get_quotes(self, instrument):
         self.ensure_token()
-        url = self.quotes_url.format(instrument=instrument, country=country)
+        url = self.quotes_url.format(instrument=instrument, country='argentina')
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
-        response = requests.get(url, headers=headers)
+        response = requests.get(url=url,headers=headers)
         if response.status_code != 200:
-            raise Exception(f"Error fetching {instrument} quotes: {response.text}")
+            try:
+                self.refresh_token()
+                response = requests.get(url=url,headers=headers)
+                if response.status_code != 200:
+                    raise Exception(f"Error fetching {instrument} quotes: {response.text}")
+            except: raise Exception(f"Error fetching {instrument} quotes: {response.text}")
         df=pd.DataFrame(response.json()['titulos'])
         df=df[['simbolo','ultimoPrecio']]
-        df=df.set_index('simbolo',inplace=True)
+        df.set_index('simbolo',inplace=True)
         return df
