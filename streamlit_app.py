@@ -51,6 +51,7 @@ with st.sidebar:
         S.iol=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
     except:pass
+st.write(S.iol)
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if 'iol' in S:
