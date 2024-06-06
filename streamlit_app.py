@@ -51,17 +51,14 @@ with st.sidebar:
         S.iol=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
     except:pass
-st.write(S.iol)
-df=S.iol.get_quotes('Acciones')
-st.write(df)
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if 'iol' in S:
     try:
         if (not ('acciones_now' in S)) or (st.button('Recargar Datos')):
-            S.acciones_now=S.iol.get_quotes('Acciones','argentina')
-            S.cedears_now=S.iol.get_quotes('CEDEARs','argentina')
-            S.titpub=S.iol.get_quotes('titulosPublicos','argentina')
+            S.acciones_now=S.iol.get_quotes('Acciones')
+            S.cedears_now=S.iol.get_quotes('CEDEARs')
+            S.titpub=S.iol.get_quotes('titulosPublicos')
         st.dataframe(S.acciones_now)
         his_op=load_operaciones()
         st.write(his_op)
