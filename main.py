@@ -37,13 +37,13 @@ def calcular_proffit_acciones():
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(S.acciones_now.iloc[row['Simbolo']['ultimoPrecio']]/row['Precio Ponderado']))
         return profit_acciones
-
-st.sidebar.text_input('Usuario',key='username')
-st.sidebar.text_input('Contraseña',key='password',type='password')
+with st.form('Login'):
+    st.sidebar.text_input('Usuario',key='username')
+    st.sidebar.text_input('Contraseña',key='password',type='password')
+    st.form_submit_button('Iniciar Sesion')
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if True:
-    st.write(S.username,S.password)
     iol=load_user_IOL(S.username,S.password)
     if (st.button('Recargar Datos')) or not ('acciones_now' in S):
         S.acciones_now=iol.get_quotes('Acciones','argentina')
