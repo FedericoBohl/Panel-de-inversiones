@@ -125,7 +125,8 @@ if 'iol' in S:
         #st.divider()
         #_=calcular_proffit_acciones()
         #st.dataframe(_)
-    except:pass
+    except:
+        pass
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
