@@ -114,7 +114,7 @@ st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if 'iol' in S:
     try:
-        if (not ('acciones_now' in S)) or (st.button('Recargar Datos')):
+        if (st.button('Recargar Datos')) or (not ('acciones_now' in S)):
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
