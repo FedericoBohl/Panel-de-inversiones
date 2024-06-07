@@ -83,6 +83,13 @@ def make_acciones(data_now : pd.DataFrame):
     #fig_gen.update_layout(margin=dict(l=1, r=1, t=10, b=1))
     return fig_merv,None#,fig_gen
 
+@st.cache_data(show_spinner=False)
+def load_quotes():
+    acciones_now=S.iol.get_quotes('Acciones')
+    cedears_now=S.iol.get_quotes('CEDEARs')
+    titpub=S.iol.get_quotes('titulosPublicos')
+    return acciones_now,cedears_now,titpub
+
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -95,7 +102,7 @@ with st.sidebar:
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
 if 'iol' in S:
-    try:
+    if True:#try:
         if (st.button('Recargar Datos')) or (not ('acciones_now' in S)):
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
@@ -107,8 +114,8 @@ if 'iol' in S:
         #st.divider()
         #_=calcular_proffit_acciones()
         #st.dataframe(_)
-    except:
-        pass
+    #except:
+    #    pass
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
@@ -126,8 +133,7 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Ganancia']=0
 #profit_cedears['Ganancia Real']=0
 
-def calcular_proffit_acciones(his_op):
-    _now:pd.DataFrame=S.acciones_now
+def calcular_proffit_acciones(his_op,_now):
     _now=_now.set_index('simbolo',inplace=True)
     st.write(_now)
 
@@ -150,8 +156,10 @@ def calcular_proffit_acciones(his_op):
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now.iloc[row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
         return profit_acciones
+S.acciones_now=S.iol.get_quotes('Acciones')
+
 his_op=load_operaciones()
 st.write(S.acciones_now)
 st.write(his_op)
-st.write(calcular_proffit_acciones(his_op))
+st.write(calcular_proffit_acciones(his_op,S.acciones_now))
 
