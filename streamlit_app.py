@@ -7,6 +7,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import openpyxl
+from datetime import datetime
 
 from IOL import TokenManager
 
@@ -149,7 +150,9 @@ def calcular_proffit_acciones(his_op,_now):
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
-            profit_acciones.at[row['Simbolo'],'Ganancia%'].append(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1))
+            profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
+                            row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(row['Fecha Liquidación']-datetime.now()).days
+                                                                  )
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
