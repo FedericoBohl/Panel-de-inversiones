@@ -115,7 +115,7 @@ def calcular_proffit_acciones(his_op,_now):
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
     for i in range(len(profit_acciones.index)):
         profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
-    return profit_acciones
+    return profit_acciones.dropna()
 
 with st.sidebar:
     with st.form('Login',border=False):
@@ -144,7 +144,8 @@ if 'iol' in S:
         fig=go.Figure()
         fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h'))
         c1.dataframe(prof_acc.drop(columns=['Ganancia%']))
-        c1.plotly_chart(fig,use_container_width=True)
+        c2.subheader('Ganancia diaria promedio')
+        c2.plotly_chart(fig,use_container_width=True)
         #his_op=load_operaciones()
         #st.write(his_op)
         #st.divider()
