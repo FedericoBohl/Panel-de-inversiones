@@ -163,7 +163,7 @@ st.write(S.acciones_now.columns)
 st.write(his_op)
 st.divider()
 _now_=S.acciones_now.copy()
-_now_=_now_.set_index('simbolo',inplace=True)
+#_now_=_now_.set_index('simbolo',inplace=True)
 st.write(_now_)
 
 st.write(calcular_proffit_acciones(his_op,S.acciones_now))
