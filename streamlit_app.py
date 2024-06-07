@@ -131,7 +131,7 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Cantidad']=0
 #profit_cedears['Monto']=0
 #profit_cedears['Ganancia']=0
-#profit_cedears['Ganancia Real']=0
+#profit_cedears['Ganancia Real']=0 
 
 def calcular_proffit_acciones(his_op,_now):
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
