@@ -152,18 +152,13 @@ def calcular_proffit_acciones(his_op,_now):
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado']))
         return profit_acciones
-S.acciones_now=S.iol.get_quotes('Acciones')
 
+S.acciones_now=S.iol.get_quotes('Acciones')
 his_op=load_operaciones()
-st.write(S.acciones_now.columns)
-st.write(his_op)
+for i in range(len(his_op.index)):
+    st.write(his_op.iloc[i])
 st.divider()
 _now_=S.acciones_now.copy()
 _now_.set_index('simbolo',inplace=True)
-#_now_=_now_.set_index('simbolo',inplace=True)
-#st.write(_now_[_now_['simbolo']=='CEPU']['ultimoPrecio'].values)
-st.write(_now_)
-st.write(_now_.loc['CELU','ultimoPrecio'])
-
 st.write(calcular_proffit_acciones(his_op,_now_))
 
