@@ -177,8 +177,8 @@ if 'iol' in S:
             prof_acc=calcular_proffit_acciones(his_op,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
-            fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h'))
-            fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+            fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h',marker_color='#683CFC'))
+            fig.update_layout(margin=dict(l=1, r=1, t=1, b=1),bargap=0.2)
             with c1.container(border=True):
                 c11,c12=st.columns(2)
                 val=0
