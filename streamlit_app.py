@@ -139,7 +139,7 @@ def calcular_proffit_acciones(his_op,_now):
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
     profit_acciones['Ganancia']=0
-    profit_acciones['Ganancia%']=[]
+    profit_acciones['Ganancia%']=[[] for _ in range(len(profit_acciones))]
     profit_acciones['Ganancia Real']=0
     for i in range(len(his_acciones.index)):
         row=his_acciones.iloc[i]
