@@ -127,8 +127,8 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Ganancia Real']=0
 
 def calcular_proffit_acciones(his_op):
-    _now:pd.DataFrame=S.acciones_now.copy()
-    st.write(S.acciones_now)
+    _now:pd.DataFrame=S.acciones_now
+    st.write(_now)
 
     _now=_now.set_index('simbolo',inplace=True)
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
