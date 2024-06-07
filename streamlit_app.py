@@ -142,7 +142,7 @@ def calcular_proffit_acciones(his_op,_now):
     profit_acciones['Ganancia Real']=0
     for i in range(len(his_op.index)):
         row=his_op.iloc[i]
-        st.write(row)
+        st.write(row['Simbolo'])
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
