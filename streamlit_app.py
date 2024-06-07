@@ -91,6 +91,32 @@ def load_quotes():
     titpub=S.iol.get_quotes('titulosPublicos')
     return acciones_now,cedears_now,titpub
 
+@st.cache_data(show_spinner=False)
+def calcular_proffit_acciones(his_op,_now):
+    his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
+    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
+    profit_acciones['Cantidad']=0
+    profit_acciones['Monto']=0
+    profit_acciones['Ganancia']=0
+    profit_acciones['Ganancia%']=[[] for _ in range(len(profit_acciones))]
+    #profit_acciones['Ganancia Real']=0
+    for i in range(len(his_acciones.index)):
+        row=his_acciones.iloc[i]
+        if row['Tipo Transacción']=='Compra':
+            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
+                            row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
+                                                                  )
+        else:
+            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
+            #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
+    for i in range(len(profit_acciones.index)):
+        profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
+    return profit_acciones
+
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -110,6 +136,15 @@ if 'iol' in S:
             S.titpub=S.iol.get_quotes('titulosPublicos')
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
+            his_op=load_operaciones()
+            _now_=S.acciones_now.copy()
+            _now_.set_index('simbolo',inplace=True)
+            prof_acc=calcular_proffit_acciones(his_op,_now_)
+            c1,c2=st.columns(2)
+            fig=go.Figure()
+            fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h'))
+            c1.dataframe(prof_acc.drop(['Ganancia%']))
+            c1.plotly_chart(fig,use_container_width=True)
         #his_op=load_operaciones()
         #st.write(his_op)
         #st.divider()
@@ -134,37 +169,6 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Ganancia']=0
 #profit_cedears['Ganancia Real']=0 
 
-def calcular_proffit_acciones(his_op,_now):
-    his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
-    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
-    profit_acciones['Cantidad']=0
-    profit_acciones['Monto']=0
-    profit_acciones['Ganancia']=0
-    profit_acciones['Ganancia%']=[[] for _ in range(len(profit_acciones))]
-    profit_acciones['Ganancia Real']=0
-    for i in range(len(his_acciones.index)):
-        row=his_acciones.iloc[i]
-        st.write(his_acciones.iloc[i])
-        st.write(row['Simbolo'])
-        if row['Tipo Transacción']=='Compra':
-            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
-            profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
-                            row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
-                                                                  )
-        else:
-            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
-            #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
-    for i in range(len(profit_acciones.index)):
-        profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
-    return profit_acciones
 
-S.acciones_now=S.iol.get_quotes('Acciones')
-his_op=load_operaciones()
-st.divider()
-_now_=S.acciones_now.copy()
-_now_.set_index('simbolo',inplace=True)
-st.write(calcular_proffit_acciones(his_op,_now_))
+
 
