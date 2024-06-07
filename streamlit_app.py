@@ -179,6 +179,17 @@ if 'iol' in S:
             fig=go.Figure()
             fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h'))
             fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+            with c1.container(border=True):
+                c11,c12=st.columns(2)
+                val=0
+                proff_av=0
+                tot_ced=sum(prof_acc['Cantidad'])
+                for i in range(len(prof_acc)):
+                    val+=(prof_acc.iloc[i]['Cantidad']*_now_.loc[prof_acc.index[i],'ultimoPrecio'])
+                    proff_av+=(prof_acc.iloc[i]['Ganancia%']*prof_acc.iloc[i]['Cantidad']/tot_ced)
+                c11.metric('Total valuado',val)
+                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+
             c1.dataframe(prof_acc.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
