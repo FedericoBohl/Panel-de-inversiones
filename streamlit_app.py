@@ -156,7 +156,7 @@ def calcular_proffit_acciones(his_op,_now):
 S.acciones_now=S.iol.get_quotes('Acciones')
 his_op=load_operaciones()
 for i in range(len(his_op.index)):
-    st.write(his_op.iloc[i]['Simbolo'])
+    st.write(his_op)
 st.divider()
 _now_=S.acciones_now.copy()
 _now_.set_index('simbolo',inplace=True)
