@@ -122,7 +122,7 @@ def calcular_proffit_acciones(his_op,_now):
 
 @st.cache_data(show_spinner=False)
 def calcular_proffit_cedears(his_op,_now):
-    his_acciones=his_op[his_op['Tipo de Acción']=='Cedears']
+    his_acciones=his_op[his_op['Tipo de Acción']=='Cedear']
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
