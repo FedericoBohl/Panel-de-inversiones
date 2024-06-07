@@ -168,7 +168,6 @@ if 'iol' in S:
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
         his_op=load_operaciones()
-        st.dataframe(his_op,use_container_width=True)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
@@ -186,12 +185,22 @@ if 'iol' in S:
         with t_ced:
             _now_=S.cedears_now.copy()
             _now_.set_index('simbolo',inplace=True)
-            prof_acc=calcular_proffit_cedears(his_op,_now_)
+            prof_ced=calcular_proffit_cedears(his_op,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
-            fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h'))
+            fig.add_trace(go.Bar(x=prof_ced['Ganancia%'],y=prof_ced.index,orientation='h'))
             fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
-            c1.dataframe(prof_acc.drop(columns=['Ganancia%']),use_container_width=True)
+            with c1.container(border=True):
+                c11,c12=st.columns(2)
+                val=0
+                proff_av=0
+                tot_ced=sum(prof_ced['Cantidad'])
+                for i in range(len(prof_ced)):
+                    val+=(prof_ced.iloc[i]['Cantidad']*_now_.loc[prof_ced.index[i],'ultimoPrecio'])
+                    proff_av+=(prof_ced.iloc[i]['Ganancia%']*prof_ced.iloc[i]['Cantidad']/tot_ced)
+                c11.metric('Total valuado',val)
+                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+            c1.dataframe(prof_ced.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
 
