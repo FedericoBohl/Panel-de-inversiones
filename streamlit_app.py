@@ -159,7 +159,7 @@ def calcular_proffit_acciones(his_op,_now):
 S.acciones_now=S.iol.get_quotes('Acciones')
 
 his_op=load_operaciones()
-st.write(S.acciones_now)
+st.write(S.acciones_now.columns)
 st.write(his_op)
 st.divider()
 _now_=S.acciones_now
