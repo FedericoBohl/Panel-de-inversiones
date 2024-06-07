@@ -167,11 +167,12 @@ if 'iol' in S:
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
+        his_op=load_operaciones()
+        st.dataframe(his_op,use_container_width=True)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
-            his_op=load_operaciones()
             _now_=S.acciones_now.copy()
             _now_.set_index('simbolo',inplace=True)
             prof_acc=calcular_proffit_acciones(his_op,_now_)
