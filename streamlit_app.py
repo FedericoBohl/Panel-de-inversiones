@@ -128,7 +128,7 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 def calcular_proffit_acciones(his_op):
     _now:pd.DataFrame=S.acciones_now.copy()
-    st.write(_now)
+    st.write(S.acciones_now)
 
     _now=_now.set_index('simbolo',inplace=True)
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
