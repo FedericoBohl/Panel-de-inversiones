@@ -163,7 +163,7 @@ _now_.set_index('simbolo',inplace=True)
 #_now_=_now_.set_index('simbolo',inplace=True)
 #st.write(_now_[_now_['simbolo']=='CEPU']['ultimoPrecio'].values)
 st.write(_now_)
-st.write(_now_.at('CELU','ultimoPrecio'))
+st.write(_now_.loc['CELU','ultimoPrecio'])
 
 st.write(calcular_proffit_acciones(his_op,S.acciones_now))
 
