@@ -134,10 +134,6 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Ganancia Real']=0
 
 def calcular_proffit_acciones(his_op,_now):
-    _now_=_now.set_index('simbolo',inplace=True)
-    st.write(_now_)
-
-    _now=_now.set_index('simbolo',inplace=True)
     his_acciones=his_op[his_op['Tipo de Acción']=='Accion']
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
@@ -150,11 +146,11 @@ def calcular_proffit_acciones(his_op,_now):
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now.iloc[row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now[_now['simbolo']==row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now.iloc[row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now[_now['simbolo']==row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
         return profit_acciones
 S.acciones_now=S.iol.get_quotes('Acciones')
 
