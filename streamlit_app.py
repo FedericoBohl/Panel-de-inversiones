@@ -146,11 +146,11 @@ def calcular_proffit_acciones(his_op,_now):
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now[_now['simbolo']==row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado']))
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
-            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now[_now['simbolo']==row['Simbolo']]['ultimoPrecio']/row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado']))
         return profit_acciones
 S.acciones_now=S.iol.get_quotes('Acciones')
 
@@ -165,5 +165,5 @@ _now_.set_index('simbolo',inplace=True)
 st.write(_now_)
 st.write(_now_.loc['CELU','ultimoPrecio'])
 
-st.write(calcular_proffit_acciones(his_op,S.acciones_now))
+st.write(calcular_proffit_acciones(his_op,_now_))
 
