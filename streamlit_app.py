@@ -29,7 +29,7 @@ def load_operaciones(path='Operaciones.xlsx'):
     return df.sort_values(by='Fecha Liquidación', ascending=True)
 
 @st.cache_data(show_spinner=False)
-def load_user_IOL(username,password):
+def load_user_IOL(username,password)->TokenManager:
     token_manager = TokenManager(username,password)
     return token_manager
 
@@ -156,8 +156,9 @@ with st.sidebar:
         st.text_input('Contraseña',key='password',type='password')
         st.form_submit_button('Iniciar Sesion',type='primary')
     try:
-        S.iol=load_user_IOL(S.username,S.password)
+        S.iol:TokenManager=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
+        st.write(S.iol.token_info)
     except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
