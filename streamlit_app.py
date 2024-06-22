@@ -174,6 +174,8 @@ if 'iol' in S:
             port=S.iol.get_portfolio()
             port_df=pd.DataFrame(port['activos'])
             st.write(port_df['titulo'].to_list())
+            ticker=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
+            st.write(ticker)
             _={"descripcion":"Apple",
                "mercado":"bcba",
                "moneda":"peso_Argentino",
