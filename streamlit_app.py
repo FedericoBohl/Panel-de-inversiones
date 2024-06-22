@@ -179,7 +179,7 @@ if 'iol' in S:
             port_df=port_df.drop(columns=['cantidad','comprometido','puntosVariacion','ultimoPrecio','ppc','gananciaPorcentaje','gananciaDinero','parking','titulo'])
             port_df['simbolo']=tickers
             port_df['tipo']=tipos
-            port_df['valorizado%']=port_df['valorizado']/sum(port_df['valorizado'])
+            port_df['valorizado%']=100*port_df['valorizado']/sum(port_df['valorizado'])
             st.dataframe(port_df)
             fig = px.sunburst(port_df, path=['tipo', 'simbolo'],
                        values=port_df['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
@@ -190,6 +190,7 @@ if 'iol' in S:
             "<b>Variazión<b>: %{customdata[1]}%"
             ])
             )
+            st.plotly_chart(fig,use_container_width=True)
 
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
