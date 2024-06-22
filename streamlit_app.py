@@ -194,10 +194,23 @@ if 'iol' in S:
                 #2=Bonos
                 #3=cede
                 st.write(ganancia_diaria_por_tipo)
-                fig=go.Figure(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"}
+                fig=go.Figure()
+                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
+                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                                           domain = {'row': 0, 'column': 0}
                                            ))
+                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
+                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                                           domain = {'row': 0, 'column': 1}
+                                           ))
+                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
+                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                                           domain = {'row': 0, 'column': 2}
+                                           ))
+                fig.update_layout(grid = {'rows': 2, 'columns': 2, 'pattern': "independent"})
+
                 c21.plotly_chart(fig,use_container_width=True)
+                
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
