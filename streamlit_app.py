@@ -261,7 +261,7 @@ if 'iol' in S:
         with t_bon:
             _=S.iol.get_operaciones()
             #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
-            st.write(_)
+            st.write(_.json())
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
