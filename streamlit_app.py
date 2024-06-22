@@ -173,7 +173,7 @@ if 'iol' in S:
         with t_total:
             port=S.iol.get_portfolio()
             port_df=pd.DataFrame(port['activos'])
-            st.write(port_df['título'])
+            st.write(port_df.columns)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
