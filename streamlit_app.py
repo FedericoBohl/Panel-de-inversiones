@@ -267,7 +267,7 @@ if 'iol' in S:
             df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
             df=df.sort_values(by='fechaOperada', ascending=True)
             st.write(df)
-            st.write(S.acciones_now)
+            st.write(S.acciones_now['simbolo'])
 
             kind=[]
             for i in df.values.tolist():
