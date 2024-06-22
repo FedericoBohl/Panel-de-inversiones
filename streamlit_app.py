@@ -189,9 +189,12 @@ if 'iol' in S:
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
                 st.subheader(f"Ganancia de hoy: {col}")
                 c21,c22,c23=st.columns(3)
-                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum()#.reset_index()
+                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
+                #1=acciones
+                #2=Bonos
+                #3=cede
                 st.write(ganancia_diaria_por_tipo)
-                fig=go.Figure(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo['gananciaDiariaPonderada'][0],
+                fig=go.Figure(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
                                            number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".0f"},title = {"text": "Acciones"}
                                            ))
                 c21.plotly_chart(fig,use_container_width=True)
