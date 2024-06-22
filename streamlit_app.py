@@ -262,7 +262,7 @@ if 'iol' in S:
             response=S.iol.get_operaciones()
             #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
             df=pd.DataFrame(response.json())
-            df=df[df['tipo'] == 'Venta' or 'Compra']
+            df=df[df['tipo'] in ('Venta','Compra')]
             st.write(df)
             #filtrar por compra o venta
             #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
