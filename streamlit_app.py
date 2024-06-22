@@ -261,7 +261,7 @@ if 'iol' in S:
         with t_bon:
             response=S.iol.get_operaciones()
             #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
-            df=pd.DataFrame(response.json()['titulos'])
+            df=pd.DataFrame(response.json())
             st.write(df)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
