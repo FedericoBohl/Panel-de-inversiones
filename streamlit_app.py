@@ -186,7 +186,8 @@ def calcular_proffit_bonos(his_op,_now):
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
-    return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
+    profit_acciones=profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
+    return profit_acciones[profit_acciones['Cantidad']>0]
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
