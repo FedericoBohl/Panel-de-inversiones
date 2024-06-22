@@ -258,13 +258,9 @@ if 'iol' in S:
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
 
-        #his_op=load_operaciones()
-        #st.write(his_op)
-        #st.divider()
-        #_=calcular_proffit_acciones()
-        #st.dataframe(_)
-    #except:
-    #    pass
+        with t_bon:
+            _=S.iol.get_operaciones()
+            st.write(_)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
