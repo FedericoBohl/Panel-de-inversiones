@@ -170,6 +170,9 @@ if 'iol' in S:
             S.titpub=S.iol.get_quotes('titulosPublicos')
         his_op=load_operaciones()
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
+        with t_total:
+            port=S.iol.get_portfolio()
+            st.write(port)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
