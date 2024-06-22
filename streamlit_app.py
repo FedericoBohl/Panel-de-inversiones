@@ -186,26 +186,32 @@ if 'iol' in S:
             with c2:
                 _=round(S.port['gananciaDiariaPonderada'].sum(),2)
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
-                st.subheader(f"Ganancia de hoy: {col}")
-                c21,c22,c23=st.columns(3)
+                st.header(f"Ganancia de hoy: {col}")
+                c21,c22=st.columns()
                 ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
                 fig=go.Figure()
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Acciones"},
+                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Acciones"},
                                            domain = {'row': 0, 'column': 0}
                                            ))
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
-                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Cedears"},
+                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Cedears"},
                                            domain = {'row': 0, 'column': 1}
                                            ))
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
-                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Bonos"},
+                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Bonos"},
                                            domain = {'row': 0, 'column': 2}
                                            ))
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
                 fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
                 c2.plotly_chart(fig,use_container_width=True)
-                st.write(S.port.nlargest(3, 'variacionDiaria'))               
+                c21.subheader(':green[Top Winners]')
+                for i in S.port.nlargest(3, 'variacionDiaria').tolist():
+                    c21.caption(f'* {i['simbolo']}:  {i['variacionDiaria']}%')
+                c22.subheader(':red[Top Loosers]')
+                for i in S.port.nsmallest(3, 'variacionDiaria').tolist():
+                    c22.caption(f'* {i['simbolo']}:  {i['variacionDiaria']}%')
+
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
