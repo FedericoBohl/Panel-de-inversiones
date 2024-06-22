@@ -259,9 +259,9 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
 
         with t_bon:
-            #_=S.iol.get_operaciones()
+            _=S.iol.get_operaciones()
             #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
-            st.write(S.iol.portfolio_url)
+            st.write(_)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']

@@ -14,7 +14,6 @@ class TokenManager:
         self.base_url = 'https://api.invertironline.com/api/v2'
         self.portfolio_url = f'{self.base_url}/portafolio'
         self.quotes_url = f'{self.base_url}/Cotizaciones/{{instrument}}/{{country}}/Todos'
-        self.operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
         self.get_new_token()
 
     def load_user_data(self):
@@ -88,6 +87,7 @@ class TokenManager:
     
     def get_operaciones(self):
         self.ensure_token()
+        operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
-        response = requests.get(self.operaciones_url, headers=headers)
+        response = requests.get(operaciones_url, headers=headers)
         return response
