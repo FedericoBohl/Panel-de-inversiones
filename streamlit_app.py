@@ -271,7 +271,11 @@ if 'iol' in S:
 
             kind=[]
             for i in df.values.tolist():
-                _='Accion'
+                _='Accion' if i[2] in S.acciones_now['simbolo'] else ('Cedear' if i[2] in S.cedears_now['simbolo'] else ('Bono' if i[2] in S.titpub['simbolo'] else None))
+                kind.append(_)
+            df['Tipo de Acción']=kind
+            st.write(df)
+
             #filtrar por compra o venta
             #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
             #df.sort_values(by='fechaOperada', ascending=True)
