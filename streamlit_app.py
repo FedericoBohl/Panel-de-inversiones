@@ -123,6 +123,16 @@ def calcular_proffit_acciones(his_op,_now):
 @st.cache_data(show_spinner=False)
 def calcular_proffit_cedears(his_op,_now):
     his_acciones=his_op[his_op['Tipo de Acción']=='Cedear']
+    ratios={'JPM':3,
+            'AAPL':2,
+            'MELI':2,
+            'VIST':3}
+    fecha_limite = pd.Timestamp('2024-01-26')
+    for ticker in ratios.keys():
+        filtro = (his_acciones['Simbolo'] == key) & (his_acciones['Fecha Liquidación'] < fecha_limite)
+        his_acciones.loc[filtro, 'Cantidad'] *= ratios[key]
+        his_acciones.loc[filtro, 'Precio Ponderado'] /= ratios[key]
+    
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
