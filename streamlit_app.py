@@ -168,7 +168,7 @@ if 'iol' in S:
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
             S.port=S.iol.get_portfolio()
-        his_op=load_operaciones()
+            S.operaciones=S.iol.get_operaciones(S.acciones_now,S.cedears_now,S.titpub)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
             c1,c2=st.columns((0.4,0.6))
@@ -217,7 +217,7 @@ if 'iol' in S:
             st.plotly_chart(fig,use_container_width=True)
             _now_=S.acciones_now.copy()
             _now_.set_index('simbolo',inplace=True)
-            prof_acc=calcular_proffit_acciones(his_op,_now_)
+            prof_acc=calcular_proffit_acciones(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
             fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h',marker_color='#683CFC'))
@@ -239,7 +239,7 @@ if 'iol' in S:
         with t_ced:
             _now_=S.cedears_now.copy()
             _now_.set_index('simbolo',inplace=True)
-            prof_ced=calcular_proffit_cedears(his_op,_now_)
+            prof_ced=calcular_proffit_cedears(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
             fig.add_trace(go.Bar(x=prof_ced['Ganancia%'],y=prof_ced.index,orientation='h',marker_color='#683CFC'))
@@ -259,26 +259,7 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
 
         with t_bon:
-            response=S.iol.get_operaciones()
-            #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
-            df=pd.DataFrame(response.json())
-            df=df[df['tipo'].isin(['Compra', 'Venta'])]
-            df=df[df['estado']=='terminada']
-            df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
-            df=df.sort_values(by='fechaOperada', ascending=True)
-            st.write(df)
-            st.write(S.acciones_now['simbolo'].to_list())
-
-            kind=[]
-            for i in df.values.tolist():
-                _='Accion' if i[2] in S.acciones_now['simbolo'].to_list() else ('Cedear' if i[2] in S.cedears_now['simbolo'].to_list() else ('Bono' if i[2] in S.titpub['simbolo'].to_list() else None))
-                kind.append(_)
-            df['Tipo de Acción']=kind
-            st.write(df)
-
-            #filtrar por compra o venta
-            #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
-            #df.sort_values(by='fechaOperada', ascending=True)
+            st.write(S.operaciones)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
