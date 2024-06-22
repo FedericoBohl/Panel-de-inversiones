@@ -56,7 +56,15 @@ class TokenManager:
         response = requests.get(self.portfolio_url, headers=headers)
         if response.status_code != 200:
             raise Exception(f"Error fetching portfolio: {response.text}")
-        return response.json()
+        port_df=pd.DataFrame(response.json()['activos'])
+        tickers=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
+        tipos=[equity['tipo'] for equity in port_df['titulo'].to_list()]
+        port_df=port_df.drop(columns=['cantidad','comprometido','puntosVariacion','ultimoPrecio','ppc','gananciaPorcentaje','gananciaDinero','parking','titulo'])
+        port_df['simbolo']=tickers
+        port_df['tipo']=tipos.replace('TitulosPublicos', 'Bonos').replace('FondoComundeInversion','FCI')
+        port_df['valorizado%']=round(100*port_df['valorizado']/sum(port_df['valorizado']),2)
+        port_df['gananciaDiariaPonderada'] = port_df['variacionDiaria'] * port_df['valorizado%']
+        return port_df
 
     def get_quotes(self, instrument):
         self.ensure_token()

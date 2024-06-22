@@ -148,8 +148,7 @@ def calcular_proffit_cedears(his_op,_now):
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
-
-
+    
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -168,21 +167,13 @@ if 'iol' in S:
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
+            S.port=S.iol.get_portfolio()
         his_op=load_operaciones()
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
-            port=S.iol.get_portfolio()
-            port_df=pd.DataFrame(port['activos'])
-            tickers=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
-            tipos=[equity['tipo'] for equity in port_df['titulo'].to_list()]
-            st.write(port_df)
-            port_df=port_df.drop(columns=['cantidad','comprometido','puntosVariacion','ultimoPrecio','ppc','gananciaPorcentaje','gananciaDinero','parking','titulo'])
-            port_df['simbolo']=tickers
-            port_df['tipo']=tipos
-            port_df['valorizado%']=100*port_df['valorizado']/sum(port_df['valorizado'])
-            st.dataframe(port_df)
-            fig = px.sunburst(port_df, path=['tipo', 'simbolo'],
-                       values=port_df['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
+            c1,c2=st.columns(2)
+            fig = px.sunburst(S.port, path=['tipo', 'simbolo'],
+                       values=S.port['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
             fig.update_traces(
             hovertemplate="<br>".join([
             "<b><b>%{label}",
@@ -190,8 +181,15 @@ if 'iol' in S:
             "<b>Variazión<b>: %{customdata[1]}%"
             ])
             )
-            st.plotly_chart(fig,use_container_width=True)
-
+            fig.update_layout(margin=dict(l=1, r=1, t=75, b=1),height=600)
+            c1.plotly_chart(fig,use_container_width=True)
+            with c2:
+                _=S.port['gananciaDiariaPonderada'].sum()
+                col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
+                st.markdown(f"<h3 style='text-align: center;'>Ganancia de hoy {col}</h3>", unsafe_allow_html=True)
+                c21,c22,c23=st.columns(3)
+                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().reset_index()
+                st.write(ganancia_diaria_por_tipo)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
