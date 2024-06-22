@@ -206,6 +206,7 @@ if 'iol' in S:
                 fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
                 c2.plotly_chart(fig,use_container_width=True)
                 c21.subheader(':green[Top Winners]')
+                st.write(S.port.nlargest(3, 'variacionDiaria').to_dict())
                 for i in S.port.nlargest(3, 'variacionDiaria').to_dict():
                     c21.caption(f"* {i['simbolo']}:  {i['variacionDiaria']}%")
                 c22.subheader(':red[Top Loosers]')
