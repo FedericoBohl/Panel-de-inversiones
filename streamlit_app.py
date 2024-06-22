@@ -205,7 +205,7 @@ if 'iol' in S:
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
                 fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
                 c2.plotly_chart(fig,use_container_width=True)
-                
+                st.caption('sssssssssss')               
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
