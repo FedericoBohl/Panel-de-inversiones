@@ -65,7 +65,7 @@ class TokenManager:
         port_df['tipo']=port_df['tipo'].replace('TitulosPublicos', 'Bonos')
         port_df['tipo']=port_df['tipo'].replace('FondoComundeInversion','FCI')
         port_df['valorizado%']=round(100*port_df['valorizado']/sum(port_df['valorizado']),2)
-        port_df['gananciaDiariaPonderada'] = port_df['variacionDiaria'] * port_df['valorizado%']
+        port_df['gananciaDiariaPonderada'] = port_df['variacionDiaria'] * port_df['valorizado%']/100
         return port_df
 
     def get_quotes(self, instrument):
