@@ -203,7 +203,7 @@ if 'iol' in S:
                                            domain = {'row': 0, 'column': 2}
                                            ))
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
-                fig.update_layout(margin=dict(l=1, r=1, t=10, b=1))
+                fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
                 c2.plotly_chart(fig,use_container_width=True)
                 
         with t_acc:
