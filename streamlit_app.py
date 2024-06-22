@@ -173,16 +173,9 @@ if 'iol' in S:
         with t_total:
             port=S.iol.get_portfolio()
             port_df=pd.DataFrame(port['activos'])
-            st.write(port_df['titulo'].to_list())
-            ticker=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
-            st.write(ticker)
-            _={"descripcion":"Apple",
-               "mercado":"bcba",
-               "moneda":"peso_Argentino",
-               "pais":"argentina",
-               "plazo":"t1",
-               "simbolo":"AAPL",
-               "tipo":"CEDEARS"}
+            tickers=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
+            tipos=[equity['tipo'] for equity in port_df['titulo'].to_list()]
+            st.write(port_df)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
