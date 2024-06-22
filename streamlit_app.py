@@ -196,15 +196,15 @@ if 'iol' in S:
                 st.write(ganancia_diaria_por_tipo)
                 fig=go.Figure()
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Acciones"},
                                            domain = {'row': 0, 'column': 0}
                                            ))
-                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
+                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Cedears"},
                                            domain = {'row': 0, 'column': 1}
                                            ))
-                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
+                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
+                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Bonos"},
                                            domain = {'row': 0, 'column': 2}
                                            ))
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
