@@ -271,7 +271,7 @@ if 'iol' in S:
 
             kind=[]
             for i in df.values.tolist():
-                _='Accion' if i[2] in S.acciones_now['simbolo'] else ('Cedear' if i[2] in S.cedears_now['simbolo'] else ('Bono' if i[2] in S.titpub['simbolo'] else None))
+                _='Accion' if i[2] in S.acciones_now['simbolo'].to_list() else ('Cedear' if i[2] in S.cedears_now['simbolo'].to_list() else ('Bono' if i[2] in S.titpub['simbolo'].to_list() else None))
                 kind.append(_)
             df['Tipo de Acción']=kind
             st.write(df)
