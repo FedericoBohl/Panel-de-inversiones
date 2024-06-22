@@ -158,7 +158,36 @@ def calcular_proffit_cedears(his_op,_now):
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
+
+@st.cache_data(show_spinner=False)
+def calcular_proffit_bonos(his_op,_now):
+    his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
     
+    profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
+    profit_acciones['Cantidad']=0
+    profit_acciones['Monto']=0
+    profit_acciones['Ganancia']=0
+    profit_acciones['Ganancia%']=[[] for _ in range(len(profit_acciones))]
+    #profit_acciones['Ganancia Real']=0
+    for i in range(len(his_acciones.index)):
+        row=his_acciones.iloc[i]
+        if row['Tipo Transacción']=='Compra':
+            profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
+            profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
+            profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
+                            row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
+                                                                  )
+        else:
+            profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
+            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
+            #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
+    for i in range(len(profit_acciones.index)):
+        if profit_acciones.iloc[i]['Cantidad'] != 0:
+            profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
+        else:
+            profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
+    return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -267,9 +296,27 @@ if 'iol' in S:
             c1.dataframe(prof_ced.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
-
         with t_bon:
-            st.write(S.operaciones)
+            _now_=S.titpub.copy()
+            _now_.set_index('simbolo',inplace=True)
+            prof_ced=calcular_proffit_cedears(S.operaciones,_now_)
+            c1,c2=st.columns(2)
+            fig=go.Figure()
+            fig.add_trace(go.Bar(x=prof_ced['Ganancia%'],y=prof_ced.index,orientation='h',marker_color='#683CFC'))
+            fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+            with c1.container(border=True):
+                c11,c12=st.columns(2)
+                val=0
+                proff_av=0
+                tot_ced=sum(prof_ced['Cantidad'])
+                for i in range(len(prof_ced)):
+                    val+=(prof_ced.iloc[i]['Cantidad']*_now_.loc[prof_ced.index[i],'ultimoPrecio'])
+                    proff_av+=(prof_ced.iloc[i]['Ganancia%']*prof_ced.iloc[i]['Cantidad']/tot_ced)
+                c11.metric('Total valuado',val)
+                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+            c1.dataframe(prof_ced.drop(columns=['Ganancia%']),use_container_width=True)
+            c2.subheader('Ganancia diaria promedio')
+            c2.plotly_chart(fig,use_container_width=True)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
