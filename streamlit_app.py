@@ -207,7 +207,7 @@ if 'iol' in S:
                                            number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"},
                                            domain = {'row': 0, 'column': 2}
                                            ))
-                fig.update_layout(grid = {'rows': 2, 'columns': 2, 'pattern': "independent"})
+                fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
 
                 c21.plotly_chart(fig,use_container_width=True)
                 
