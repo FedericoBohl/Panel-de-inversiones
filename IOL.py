@@ -61,7 +61,9 @@ class TokenManager:
         tipos=[equity['tipo'] for equity in port_df['titulo'].to_list()]
         port_df=port_df.drop(columns=['cantidad','comprometido','puntosVariacion','ultimoPrecio','ppc','gananciaPorcentaje','gananciaDinero','parking','titulo'])
         port_df['simbolo']=tickers
-        port_df['tipo']=tipos.replace('TitulosPublicos', 'Bonos').replace('FondoComundeInversion','FCI')
+        port_df['tipo']=tipos
+        port_df['tipo']=port_df['tipo'].replace('TitulosPublicos', 'Bonos')
+        port_df['tipo']=port_df['tipo'].replace('FondoComundeInversion','FCI')
         port_df['valorizado%']=round(100*port_df['valorizado']/sum(port_df['valorizado']),2)
         port_df['gananciaDiariaPonderada'] = port_df['variacionDiaria'] * port_df['valorizado%']
         return port_df
