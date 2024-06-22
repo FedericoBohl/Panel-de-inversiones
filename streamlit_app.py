@@ -176,6 +176,21 @@ if 'iol' in S:
             tickers=[equity['simbolo'] for equity in port_df['titulo'].to_list()]
             tipos=[equity['tipo'] for equity in port_df['titulo'].to_list()]
             st.write(port_df)
+            port_df=port_df.drop(columns=['cantidad','comprometido','puntosVariacion','ultimoPrecio','ppc','gananciaPorcentaje','gananciaDinero','parking','titulo'])
+            port_df['simbolo']=tickers
+            port_df['tipo']=tipos
+            port_df['valorizado%']=port_df['valorizado']/sum(port_df['valorizado'])
+            st.dataframe(port_df)
+            fig = px.sunburst(port_df, path=['tipo', 'simbolo'],
+                       values=port_df['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
+            fig.update_traces(
+            hovertemplate="<br>".join([
+            "<b><b>%{label}",
+            "<b>Valorizado<b>: %{customdata[0]} (%{value}%)",
+            "<b>Variazión<b>: %{customdata[1]}%"
+            ])
+            )
+
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
