@@ -207,10 +207,10 @@ if 'iol' in S:
                 c2.plotly_chart(fig,use_container_width=True)
                 c21.subheader(':green[Top Winners]')
                 for i in S.port.nlargest(3, 'variacionDiaria').tolist():
-                    c21.caption(f'* {i['simbolo']}:  {i['variacionDiaria']}%')
+                    c21.caption(f"* {i['simbolo']}:  {i['variacionDiaria']}%")
                 c22.subheader(':red[Top Loosers]')
                 for i in S.port.nsmallest(3, 'variacionDiaria').tolist():
-                    c22.caption(f'* {i['simbolo']}:  {i['variacionDiaria']}%')
+                    c22.caption(f"* {i['simbolo']}:  {i['variacionDiaria']}%")
 
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
