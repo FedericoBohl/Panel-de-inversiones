@@ -185,9 +185,9 @@ if 'iol' in S:
             c1.plotly_chart(fig,use_container_width=True)
             with c2:
                 st.write(S.port)
-                _=S.port['gananciaDiariaPonderada'].sum()
+                _=round(S.port['gananciaDiariaPonderada'].sum()*100,2)
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
-                st.markdown(f"""<h3 style='text-align: center;'>Ganancia de hoy {col}</h3>""", unsafe_allow_html=True)
+                st.subheader(f"Ganancia de hoy: {col}")
                 c21,c22,c23=st.columns(3)
                 ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().reset_index()
                 st.write(ganancia_diaria_por_tipo)
