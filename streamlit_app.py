@@ -209,7 +209,7 @@ if 'iol' in S:
                                            ))
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
 
-                c21.plotly_chart(fig,use_container_width=True)
+                c2.plotly_chart(fig,use_container_width=True)
                 
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
