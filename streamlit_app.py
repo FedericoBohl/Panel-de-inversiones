@@ -195,7 +195,7 @@ if 'iol' in S:
                 #3=cede
                 st.write(ganancia_diaria_por_tipo)
                 fig=go.Figure(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".0f"},title = {"text": "Acciones"}
+                                           number={'suffix':'%'},delta = {"reference": 0},title = {"text": "Acciones"}
                                            ))
                 c21.plotly_chart(fig,use_container_width=True)
         with t_acc:
