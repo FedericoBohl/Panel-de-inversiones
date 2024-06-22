@@ -189,7 +189,7 @@ if 'iol' in S:
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
                 st.subheader(f"Ganancia de hoy: {col}")
                 c21,c22,c23=st.columns(3)
-                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().reset_index()
+                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum()#.reset_index()
                 st.write(ganancia_diaria_por_tipo)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
