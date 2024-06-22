@@ -187,7 +187,7 @@ if 'iol' in S:
                 _=round(S.port['gananciaDiariaPonderada'].sum(),2)
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
                 st.header(f"Ganancia de hoy: {col}")
-                c21,c22=st.columns()
+                c21,c22=st.columns(2)
                 ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
                 fig=go.Figure()
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
