@@ -89,5 +89,5 @@ class TokenManager:
     def get_operaciones(self):
         self.ensure_token()
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
-        response = requests.get(self.op, headers=headers)
+        response = requests.get(self.operaciones_url, headers=headers)
         return response
