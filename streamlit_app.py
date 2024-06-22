@@ -266,6 +266,9 @@ if 'iol' in S:
             df=df[df['estado']=='terminada']
             df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
             df=df.sort_values(by='fechaOperada', ascending=True)
+            kind=[]
+            for i in df.values.tolist():
+                st.write(i)
             st.write(df)
             #filtrar por compra o venta
             #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
