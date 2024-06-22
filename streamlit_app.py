@@ -171,7 +171,7 @@ if 'iol' in S:
         his_op=load_operaciones()
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
-            c1,c2=st.columns(2)
+            c1,c2=st.columns((0.4,0.6))
             fig = px.sunburst(S.port, path=['tipo', 'simbolo'],
                        values=S.port['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
             fig.update_traces(
@@ -184,16 +184,11 @@ if 'iol' in S:
             fig.update_layout(margin=dict(l=1, r=1, t=75, b=1),height=600)
             c1.plotly_chart(fig,use_container_width=True)
             with c2:
-                st.write(S.port)
                 _=round(S.port['gananciaDiariaPonderada'].sum(),2)
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
                 st.subheader(f"Ganancia de hoy: {col}")
                 c21,c22,c23=st.columns(3)
                 ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
-                #1=acciones
-                #2=Bonos
-                #3=cede
-                st.write(ganancia_diaria_por_tipo)
                 fig=go.Figure()
                 fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
                                            number={'suffix':'%'},delta = {"reference": 0, "valueformat": ".3f"},title = {"text": "Acciones"},
