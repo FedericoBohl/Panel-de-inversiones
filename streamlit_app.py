@@ -172,7 +172,8 @@ if 'iol' in S:
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
             port=S.iol.get_portfolio()
-            st.write(pd.DataFrame(port['activos']))
+            port_df=pd.DataFrame(port['activos'])
+            st.write(port_df['título'])
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
