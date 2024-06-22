@@ -85,9 +85,22 @@ class TokenManager:
         df=df.rename(columns={'variacionPorcentual':'Var%'})
         return df
     
-    def get_operaciones(self):
+    def get_operaciones(self,acciones_now,cedears_now,titpub):
         self.ensure_token()
         operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
         response = requests.get(operaciones_url, headers=headers)
-        return response
+        if response.status_code != 200:
+            raise Exception(f"Error fetching portfolio: {response.text}")
+        df=pd.DataFrame(response.json())
+        df=df[df['tipo'].isin(['Compra', 'Venta'])]
+        df=df[df['estado']=='terminada']
+        df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
+        df=df.sort_values(by='fechaOperada', ascending=True)
+        kind=[]
+        for i in df.values.tolist():
+            _='Accion' if i[2] in acciones_now['simbolo'].to_list() else ('Cedear' if i[2] in cedears_now['simbolo'].to_list() else ('Bono' if i[2] in titpub['simbolo'].to_list() else None))
+            kind.append(_)
+        df['Tipo de Acción']=kind
+        df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
+        return df
