@@ -204,7 +204,7 @@ if 'iol' in S:
                                            ))
                 fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
                 fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
-                c2.plotly_chart(fig,use_container_width=True)
+                st.plotly_chart(fig,use_container_width=True)
                 c21.subheader(':green[Top Winners]')
                 for i in S.port.nlargest(3, 'variacionDiaria').values.tolist():
                     c21.caption(f"* {i[2]}:  {i[0]}%")
