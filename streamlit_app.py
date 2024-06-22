@@ -262,7 +262,11 @@ if 'iol' in S:
             response=S.iol.get_operaciones()
             #_=f"{S.iol.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
             df=pd.DataFrame(response.json())
+            df=df[df['tipo' in ('Venta','Compra')]]
             st.write(df)
+            #filtrar por compra o venta
+            #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
+            #df.sort_values(by='fechaOperada', ascending=True)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
