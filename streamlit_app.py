@@ -264,8 +264,8 @@ if 'iol' in S:
             df=pd.DataFrame(response.json())
             df=df[df['tipo'].isin(['Compra', 'Venta'])]
             df=df[df['estado']=='terminada']
-            st.write(df)
             df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
+            df=df.sort_values(by='fechaOperada', ascending=True)
             st.write(df)
             #filtrar por compra o venta
             #['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado]
