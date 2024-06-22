@@ -103,4 +103,5 @@ class TokenManager:
             kind.append(_)
         df['Tipo de Acción']=kind
         df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
+        df['Fecha Liquidación']=pd.to_datetime(df['Fecha Liquidación'])
         return df
