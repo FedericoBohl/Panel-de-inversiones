@@ -185,7 +185,7 @@ if 'iol' in S:
             c1.plotly_chart(fig,use_container_width=True)
             with c2:
                 st.write(S.port)
-                _=round(S.port['gananciaDiariaPonderada'].sum()*100,2)
+                _=round(S.port['gananciaDiariaPonderada'].sum(),2)
                 col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
                 st.subheader(f"Ganancia de hoy: {col}")
                 c21,c22,c23=st.columns(3)
