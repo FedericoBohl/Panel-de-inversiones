@@ -96,13 +96,14 @@ class TokenManager:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
-        #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
+        df['fechaOrden']=pd.to_datetime(df['fechaOperada'], errors='coerce')
+        df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         #df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
-        filtro = (df['tipo'] == 'Pago de Amortización') & (df['fechaOperada'] <= pd.Timestamp('2024-03-01'))
+        filtro = (df['tipo'] == 'Pago de Amortización') & (df['fechaOrden'] <= pd.Timestamp('2024-03-01'))
         st.dataframe(df)
         cantidad_vendida=0
-        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
+        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOrden'] < pd.Timestamp('2024-03-01'))]
         for index, row in filtered_df.iterrows():
             if row['tipo'] == 'Compra':
                 cantidad_vendida += row['cantidadOperada']
