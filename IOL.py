@@ -101,7 +101,6 @@ class TokenManager:
         #df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
         filtro = (df['tipo'] == 'Pago de Amortización')
-        st.dataframe(df)
         cantidad_vendida=0
         filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
         for index, row in filtered_df.iterrows():
@@ -129,14 +128,7 @@ class TokenManager:
             df.loc[filtro_bono, 'montoOperado'] = precio * df.loc[filtro_bono, 'cantidadOperada']
             df.loc[filtro_bono, 'fechaOperada'] = pd.Timestamp('2024-03-01')
             df.loc[filtro_bono, 'tipo'] = 'Compra'
-        st.dataframe(df)
-        #BPOA7: 85.000
-        #BPOB7: 75.000
-        #BPOC7: 65.000
-        #BPOD7: 58.000
-        #BPO27: 71.000
-        #Buscar en donde tipo es Pago de Amortización
-        #Filtrar por que arranque en BOP y buscar donde cantidadOperada!=None
+
         df=df[df['tipo'].isin(['Compra', 'Venta'])]
         df=df[df['estado']=='terminada']
         df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
