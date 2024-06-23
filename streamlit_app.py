@@ -186,8 +186,8 @@ def calcular_proffit_bonos(his_op,_now_):
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     profit_acciones=profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
-    montos=[S.port[S.port['simbolo']==i].to_list()[0][1] for i in profit_acciones.index]
-    profit_acciones['Monto']=montos
+    #montos=[S.port[S.port['simbolo']==i].to_list()[0][1] for i in profit_acciones.index]
+    #profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
 with st.sidebar:
     with st.form('Login',border=False):
@@ -320,7 +320,7 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
             st.write(S.port)
             st.write(S.port[S.port['simbolo']=='AL30'])
-            st.write(S.port[S.port['simbolo']=='AL30'].values.tolist())
+            st.write(S.port[S.port['simbolo']=='AL30'].values.tolist()[0])
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
