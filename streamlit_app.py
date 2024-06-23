@@ -160,15 +160,14 @@ def calcular_proffit_cedears(his_op,_now):
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
-def calcular_proffit_bonos(his_op,_now):
+def calcular_proffit_bonos(his_op,_now_):
     his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
-    his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']
+    his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']/100
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
     profit_acciones['Ganancia']=0
     profit_acciones['Ganancia%']=[[] for _ in range(len(profit_acciones))]
-    #profit_acciones['Ganancia Real']=0
     for i in range(len(his_acciones.index)):
         row=his_acciones.iloc[i]
         if row['Tipo Transacción']=='Compra':
@@ -182,7 +181,6 @@ def calcular_proffit_bonos(his_op,_now):
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
             profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
-    profit_acciones['Ganancia']=profit_acciones['Ganancia']/100
     for i in range(len(profit_acciones.index)):
         if profit_acciones.iloc[i]['Cantidad'] != 0:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
