@@ -163,6 +163,7 @@ def calcular_proffit_cedears(his_op,_now):
 def calcular_proffit_bonos(his_op,_now_):
     his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
     his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']/100
+    _now_['ultimoPrecio']=_now_['ultimoPrecio']/100
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
     profit_acciones['Cantidad']=0
     profit_acciones['Monto']=0
