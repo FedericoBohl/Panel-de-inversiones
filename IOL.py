@@ -95,7 +95,7 @@ class TokenManager:
         if response.status_code != 200:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
-        df['fechaOperada']=pd.to_datetime(df['fechaOperada'],format='%Y-%m-%d')
+        df['fechaOperada']=pd.to_datetime(df['fechaOperada'],format='mixed')
 
         #Ajuste por los BOPREALES
         filtro = (df['tipo'] == 'Pago de Amortización')
