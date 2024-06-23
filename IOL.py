@@ -125,6 +125,7 @@ class TokenManager:
             df.loc[filtro_bono, 'precioOperado'] = precio
             df.loc[filtro_bono, 'montoOperado'] = precio * df.loc[filtro_bono, 'cantidadOperada']
             df.loc[filtro_bono, 'tipo'] = 'Compra'
+        st.dataframe(df)
         #BPOA7: 85.000
         #BPOB7: 75.000
         #BPOC7: 65.000
