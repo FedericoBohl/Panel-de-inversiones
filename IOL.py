@@ -100,6 +100,7 @@ class TokenManager:
         df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
         filtro = (df['tipo'] == 'Pago de Amortización') & (df['fechaOperada'] <= pd.Timestamp('2024-03-01'))
+        st.dataframe(df[df['tipo'] == 'Pago de Amortización'])
         cantidad_vendida=0
         filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
         for index, row in filtered_df.iterrows():
