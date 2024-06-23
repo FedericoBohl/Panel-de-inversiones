@@ -97,7 +97,7 @@ class TokenManager:
         df=pd.DataFrame(response.json())
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
-        df=df[df['fechaOperada']!=None]
+        df=df[not df['fechaOperada']==None]
         st.dataframe(df)
         #Ajuste por los BOPREALES
         filtro = (df['tipo'] == 'Pago de Amortización')
