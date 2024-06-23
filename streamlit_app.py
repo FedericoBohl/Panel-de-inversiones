@@ -157,7 +157,12 @@ def calcular_proffit_cedears(his_op,_now):
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     st.dataframe(profit_acciones)
     st.dataframe(S.port)
-    montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
+    #montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
+    montos=[]
+    for i in profit_acciones.index:
+        _=S.port[S.port['simbolo']==i].values.tolist()
+        st.write(_)
+        montos.append(_[0][1])
     profit_acciones['Monto']=montos
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
