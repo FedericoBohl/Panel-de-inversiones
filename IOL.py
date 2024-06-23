@@ -1,6 +1,8 @@
 import requests
 from datetime import datetime, timedelta
 import pandas as pd
+import streamlit as st
+
 
 class TokenManager:
     def __init__(self, username,password):
@@ -94,6 +96,7 @@ class TokenManager:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
         df=df.set_index('numero',inplace=True)
+        st.dataframe(df)
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'])
 
         #Ajuste por los BOPREALES
