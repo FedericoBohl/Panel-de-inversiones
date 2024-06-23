@@ -98,9 +98,8 @@ class TokenManager:
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         df = df[df['fechaOperada'].notna()]
-        st.dataframe(df)
         #Ajuste por los BOPREALES
-        filtro = (df['tipo'] == 'Pago de Amortización')
+        filtro = (df['tipo'] == 'Pago de Amortización') & (df['fechaOperada'] <= pd.Timestamp('2024-03-01'))
         cantidad_vendida=0
         filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
         for index, row in filtered_df.iterrows():
@@ -108,24 +107,24 @@ class TokenManager:
                 cantidad_vendida += row['cantidadOperada']
             elif row['tipo'] == 'Venta':
                 cantidad_vendida -= row['cantidadOperada']
-        df.loc[(filtro & df['simbolo']=='BPO27'), 'cantidadOperada'] = cantidad_vendida
-        df.loc[(filtro & df['simbolo']=='BPO27'), 'precioOperado'] = 71000
-        df.loc[(filtro & df['simbolo']=='BPO27'), 'montoOperado'] = 71000*cantidad_vendida
-        df.loc[(filtro & df['simbolo']=='BPO27'), 'tipo'] = 'Venta'
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'cantidadOperada'] = cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 71000
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
 
-        df.loc[(filtro & df['simbolo']=='BPOA7'), 'precioOperado'] = 85000
-        df.loc[(filtro & df['simbolo']=='BPOA7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOA7'), 'cantidadOperada']
-        df.loc[(filtro & df['simbolo']=='BPOA7'), 'tipo'] = 'Compra'
-        df.loc[(filtro & df['simbolo']=='BPOB7'), 'precioOperado'] = 75000
-        df.loc[(filtro & df['simbolo']=='BPOB7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOB7'), 'cantidadOperada']
-        df.loc[(filtro & df['simbolo']=='BPOB7'), 'tipo'] = 'Compra'
-        df.loc[(filtro & df['simbolo']=='BPOC7'), 'precioOperado'] = 65000
-        df.loc[(filtro & df['simbolo']=='BPOC7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOC7'), 'cantidadOperada']
-        df.loc[(filtro & df['simbolo']=='BPOC7'), 'tipo'] = 'Compra'
-        df.loc[(filtro & df['simbolo']=='BPOD7'), 'precioOperado'] = 58000
-        df.loc[(filtro & df['simbolo']=='BPOD7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOD7'), 'cantidadOperada']
-        df.loc[(filtro & df['simbolo']=='BPOD7'), 'tipo'] = 'Compra'
+        precios = {
+            'BPOA7': 85000,
+            'BPOB7': 75000,
+            'BPOC7': 65000,
+            'BPOD7': 58000
+        }
 
+        # Actualizar las filas de los nuevos bonos a "Compra" con sus precios y montos
+        for simbolo, precio in precios.items():
+            filtro_bono = filtro & (df['simbolo'] == simbolo)
+            df.loc[filtro_bono, 'precioOperado'] = precio
+            df.loc[filtro_bono, 'montoOperado'] = precio * df.loc[filtro_bono, 'cantidadOperada']
+            df.loc[filtro_bono, 'tipo'] = 'Compra'
         #BPOA7: 85.000
         #BPOB7: 75.000
         #BPOC7: 65.000
