@@ -102,10 +102,12 @@ class TokenManager:
         #Ajuste por los BOPREALES
         filtro = (df['tipo'] == 'Pago de Amortización')
         cantidad_vendida=0
-        for i in df[df['simbolo']=='BPO27' & df['fechaOperada']<pd.Timestamp('2024-03-01')].values.tolist():
-            if i[2]=='Compra':cantidad_vendida+=i[6]
-            elif i[2]=='Venta':cantidad_vendida-=i[6]
-            else:continue
+        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
+        for index, row in filtered_df.iterrows():
+            if row['tipo'] == 'Compra':
+                cantidad_vendida += row['cantidadOperada']
+            elif row['tipo'] == 'Venta':
+                cantidad_vendida -= row['cantidadOperada']
         df.loc[(filtro & df['simbolo']=='BPO27'), 'cantidadOperada'] = cantidad_vendida
         df.loc[(filtro & df['simbolo']=='BPO27'), 'precioOperado'] = 71000
         df.loc[(filtro & df['simbolo']=='BPO27'), 'montoOperado'] = 71000*cantidad_vendida
