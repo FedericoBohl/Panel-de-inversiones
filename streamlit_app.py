@@ -173,14 +173,12 @@ def calcular_proffit_bonos(his_op,_now_):
         row=his_acciones.iloc[i]
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
             profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
                             row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
                                                                   )
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
     for i in range(len(profit_acciones.index)):
         if profit_acciones.iloc[i]['Cantidad'] != 0:
@@ -188,6 +186,8 @@ def calcular_proffit_bonos(his_op,_now_):
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     profit_acciones=profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
+    montos=[S.port[S.port['simbolo']==i].values.to_list()[0][1] for i in profit_acciones.index]
+    profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
 with st.sidebar:
     with st.form('Login',border=False):
