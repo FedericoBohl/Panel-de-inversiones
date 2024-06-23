@@ -104,20 +104,20 @@ def calcular_proffit_acciones(his_op,_now):
         row=his_acciones.iloc[i]
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
             profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
                             row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
                                                                   )
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
     for i in range(len(profit_acciones.index)):
         if profit_acciones.iloc[i]['Cantidad'] != 0:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
+    montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
+    profit_acciones['Monto']=montos
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
@@ -143,20 +143,20 @@ def calcular_proffit_cedears(his_op,_now):
         row=his_acciones.iloc[i]
         if row['Tipo Transacción']=='Compra':
             profit_acciones.at[row['Simbolo'],'Cantidad']+=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']+=(row['Cantidad']*row['Precio Ponderado'])
             profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
             profit_acciones.at[row['Simbolo'],'Ganancia%'].append(
                             row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']/row['Precio Ponderado'] -1)/(datetime.now()-row['Fecha Liquidación']).days
                                                                   )
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
-            profit_acciones.at[row['Simbolo'],'Monto']-=(row['Cantidad']*row['Precio Ponderado'])
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
     for i in range(len(profit_acciones.index)):
         if profit_acciones.iloc[i]['Cantidad'] != 0:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
+    montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
+    profit_acciones['Monto']=montos
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
@@ -271,7 +271,7 @@ if 'iol' in S:
                     val+=(prof_acc.iloc[i]['Cantidad']*_now_.loc[prof_acc.index[i],'ultimoPrecio'])
                     proff_av+=(prof_acc.iloc[i]['Ganancia%']*prof_acc.iloc[i]['Cantidad']/tot_ced)
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
 
             c1.dataframe(prof_acc.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
@@ -293,7 +293,7 @@ if 'iol' in S:
                     val+=(prof_ced.iloc[i]['Cantidad']*_now_.loc[prof_ced.index[i],'ultimoPrecio'])
                     proff_av+=(prof_ced.iloc[i]['Ganancia%']*prof_ced.iloc[i]['Cantidad']/tot_ced)
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
             c1.dataframe(prof_ced.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
@@ -314,13 +314,10 @@ if 'iol' in S:
                     val+=(prof_bonos.iloc[i]['Cantidad']*_now_.loc[prof_bonos.index[i],'ultimoPrecio'])
                     proff_av+=(prof_bonos.iloc[i]['Ganancia%']*prof_bonos.iloc[i]['Cantidad']/tot_ced)
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio Cedears',f'{round(proff_av,2)}%')
+                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
             c1.dataframe(prof_bonos.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
-            st.write(S.port)
-            st.write(S.port[S.port['simbolo']=='AL30'])
-            st.write(S.port[S.port['simbolo']=='AL30'].values.tolist()[0][1])
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
