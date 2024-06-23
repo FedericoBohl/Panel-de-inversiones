@@ -209,6 +209,7 @@ if 'iol' in S:
             S.titpub=S.iol.get_quotes('titulosPublicos')
             S.port=S.iol.get_portfolio()
             S.operaciones=S.iol.get_operaciones(S.acciones_now,S.cedears_now,S.titpub)
+            st.write(S.operaciones)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
             c1,c2=st.columns((0.4,0.6))
