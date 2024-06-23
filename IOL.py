@@ -97,13 +97,13 @@ class TokenManager:
         df=pd.DataFrame(response.json())
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         df['fechaOrden']=pd.to_datetime(df['fechaOperada'], errors='coerce')
-        df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
+        #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         #df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
-        filtro = (df['tipo'] == 'Pago de Amortización') & (df['fechaOrden'] <= pd.Timestamp('2024-03-01'))
+        filtro = (df['tipo'] == 'Pago de Amortización')
         st.dataframe(df)
         cantidad_vendida=0
-        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOrden'] < pd.Timestamp('2024-03-01'))]
+        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
         for index, row in filtered_df.iterrows():
             if row['tipo'] == 'Compra':
                 cantidad_vendida += row['cantidadOperada']
@@ -112,6 +112,7 @@ class TokenManager:
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'cantidadOperada'] = cantidad_vendida
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 71000
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'fechaOperada'] = pd.Timestamp('2024-03-01')
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
 
         precios = {
@@ -126,6 +127,7 @@ class TokenManager:
             filtro_bono = filtro & (df['simbolo'] == simbolo)
             df.loc[filtro_bono, 'precioOperado'] = precio
             df.loc[filtro_bono, 'montoOperado'] = precio * df.loc[filtro_bono, 'cantidadOperada']
+            df.loc[filtro_bono, 'fechaOperada'] = pd.Timestamp('2024-03-01')
             df.loc[filtro_bono, 'tipo'] = 'Compra'
         st.dataframe(df)
         #BPOA7: 85.000
