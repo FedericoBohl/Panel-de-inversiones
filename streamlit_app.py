@@ -318,6 +318,7 @@ if 'iol' in S:
             c1.dataframe(prof_bonos.drop(columns=['Ganancia%']),use_container_width=True)
             c2.subheader('Ganancia diaria promedio')
             c2.plotly_chart(fig,use_container_width=True)
+            st.write(S.port)
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 #his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
