@@ -320,7 +320,7 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
             st.write(S.port)
             st.write(S.port[S.port['simbolo']=='AL30'])
-            st.write(S.port[S.port['simbolo']=='AL30'].values.tolist()[0])
+            st.write(S.port[S.port['simbolo']=='AL30'].values.tolist()[0][1])
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
