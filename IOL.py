@@ -93,6 +93,41 @@ class TokenManager:
         if response.status_code != 200:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
+        df=df.set_index('numero',inplace=True)
+        df['fechaOperada']=pd.to_datetime(df['fechaOperada'])
+
+        #Ajuste por los BOPREALES
+        filtro = (df['tipo'] == 'Pago de Amortización')
+        cantidad_vendida=0
+        for i in df[df['simbolo']=='BPO27' & df['fechaOperada']<pd.Timestamp('2024-03-01')].values.tolist():
+            if i[2]=='Compra':cantidad_vendida+=i[6]
+            elif i[2]=='Venta':cantidad_vendida-=i[6]
+            else:continue
+        df.loc[(filtro & df['simbolo']=='BPO27'), 'cantidadOperada'] = cantidad_vendida
+        df.loc[(filtro & df['simbolo']=='BPO27'), 'precioOperado'] = 71000
+        df.loc[(filtro & df['simbolo']=='BPO27'), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & df['simbolo']=='BPO27'), 'tipo'] = 'Venta'
+
+        df.loc[(filtro & df['simbolo']=='BPOA7'), 'precioOperado'] = 85000
+        df.loc[(filtro & df['simbolo']=='BPOA7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOA7'), 'cantidadOperada']
+        df.loc[(filtro & df['simbolo']=='BPOA7'), 'tipo'] = 'Compra'
+        df.loc[(filtro & df['simbolo']=='BPOB7'), 'precioOperado'] = 75000
+        df.loc[(filtro & df['simbolo']=='BPOB7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOB7'), 'cantidadOperada']
+        df.loc[(filtro & df['simbolo']=='BPOB7'), 'tipo'] = 'Compra'
+        df.loc[(filtro & df['simbolo']=='BPOC7'), 'precioOperado'] = 65000
+        df.loc[(filtro & df['simbolo']=='BPOC7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOC7'), 'cantidadOperada']
+        df.loc[(filtro & df['simbolo']=='BPOC7'), 'tipo'] = 'Compra'
+        df.loc[(filtro & df['simbolo']=='BPOD7'), 'precioOperado'] = 58000
+        df.loc[(filtro & df['simbolo']=='BPOD7'), 'montoOperado'] = 85000*df.loc[(filtro & df['simbolo']=='BPOD7'), 'cantidadOperada']
+        df.loc[(filtro & df['simbolo']=='BPOD7'), 'tipo'] = 'Compra'
+
+        #BPOA7: 85.000
+        #BPOB7: 75.000
+        #BPOC7: 65.000
+        #BPOD7: 58.000
+        #BPO27: 71.000
+        #Buscar en donde tipo es Pago de Amortización
+        #Filtrar por que arranque en BOP y buscar donde cantidadOperada!=None
         df=df[df['tipo'].isin(['Compra', 'Venta'])]
         df=df[df['estado']=='terminada']
         df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
@@ -103,5 +138,4 @@ class TokenManager:
             kind.append(_)
         df['Tipo de Acción']=kind
         df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
-        df['Fecha Liquidación']=pd.to_datetime(df['Fecha Liquidación'])
         return df
