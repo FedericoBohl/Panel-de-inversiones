@@ -249,7 +249,7 @@ if 'iol' in S:
                 c21.subheader(':green[Top Winners]')
                 for i in S.port.nlargest(3, 'variacionDiaria').values.tolist():
                     c21.caption(f"* {i[2]}:  {i[0]}%")
-                c22.subheader(':red[Top Loosers]')
+                c22.subheader(':red[Top Losers]')
                 for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
                     c22.caption(f"* {i[2]}:  {i[0]}%")
 
