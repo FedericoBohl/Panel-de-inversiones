@@ -344,9 +344,11 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 
-
+fail=[]
 for simbol in S.operaciones['Simbolo'].unique():
-    st.subheader(simbol)
+    #st.subheader(simbol)
     data = yf.download(simbol, start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
-    st.write(data)
-    st.divider()
+    if len(data)==0: fail.append(simbol)
+    #st.write(data)
+    #st.divider()
+st.write(fail)
