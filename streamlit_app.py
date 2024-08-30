@@ -374,7 +374,7 @@ tickers={
     'BPJ25':'BPJ5D',
     'BPY26':'BPY6D'
 }
-st.write(S.iol.get_his('BPA7D'))
+#st.write(S.iol.get_his('BPA7D'))
 
 for simbol in S.operaciones['Simbolo'].unique():
     #st.subheader(simbol)
