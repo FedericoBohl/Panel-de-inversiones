@@ -96,8 +96,8 @@ class TokenManager:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
         st.write(df)
-        df['fechaOperada']=pd.to_datetime(df['fechaOperada'],format='%Y-%m-%dT%H:%M:%S', errors='coerce')
-        df['fechaOrden']=pd.to_datetime(df['fechaOperada'],format='%Y-%m-%dT%H:%M:%S', errors='coerce')
+        df['fechaOperada'] = pd.to_datetime(df['fechaOperada'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
+        df['fechaOrden'] = pd.to_datetime(df['fechaOrden'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
         st.write(df)
         #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         #df = df[df['fechaOperada'].notna()]
