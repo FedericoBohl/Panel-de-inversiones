@@ -89,7 +89,7 @@ class TokenManager:
         return df
     def get_his(self,ticker):
         self.ensure_token()
-        url = self.his_url.format(ticker=ticker,date=datetime.today().strftime('%Y-%m-%d'))
+        url = self.his_url.format(ticker=ticker,date='2024-08-30')#datetime.today().strftime('%Y-%m-%d'))
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
         response = requests.get(url=url,headers=headers)
         if response.status_code != 200:
