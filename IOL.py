@@ -99,11 +99,14 @@ class TokenManager:
                 if response.status_code != 200:
                     raise Exception(f"Error fetching {ticker} quotes: {response.text}")
             except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
+        st.write(response)
+        st.write(response.json())
         df=pd.DataFrame(response.json()['titulos'])
         st.write(df)
         df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
         df=df.rename(columns={'variacionPorcentual':'Var%'})
         return df  
+    
     def get_operaciones(self,acciones_now,cedears_now,titpub):
         self.ensure_token()
         operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
