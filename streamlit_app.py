@@ -8,6 +8,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import openpyxl
 from datetime import datetime
+import yfinance as yf
 
 from IOL import TokenManager
 
@@ -343,4 +344,4 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 
-st.write(S.iol.get_quotes('aDRs'))
+st.write(S.operaciones)
