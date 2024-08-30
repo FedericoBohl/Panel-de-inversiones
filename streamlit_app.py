@@ -343,3 +343,4 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 
+st.write(S.iol.get_quotes('aDRs'))
