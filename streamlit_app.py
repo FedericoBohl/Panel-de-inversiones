@@ -345,10 +345,19 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 fail=[]
+tickers={
+    'YPFD':'YPF',
+    'PAMP':'PAM',
+    "BRKB":'BRK.B'
+}
 for simbol in S.operaciones['Simbolo'].unique():
     #st.subheader(simbol)
     data = yf.download(simbol, start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
-    if len(data)==0: fail.append(simbol)
+    if len(data)==0:
+        data = yf.download(f'{simbol}D', start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
+        if len(data)==0:
+            data = yf.download(f'{simbol}C', start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
+            if len(data)==0:fail.append(simbol)
     #st.write(data)
     #st.divider()
 st.write(fail)
