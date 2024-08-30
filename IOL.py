@@ -95,6 +95,7 @@ class TokenManager:
         if response.status_code != 200:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
+        st.write(df)
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         df['fechaOrden']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
