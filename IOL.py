@@ -72,7 +72,7 @@ class TokenManager:
 
     def get_quotes(self, instrument):
         self.ensure_token()
-        url = self.quotes_url.format(instrument=instrument, country='argentina')
+        url = self.quotes_url.format(instrument=instrument, country=('argentina' if instrument!='aDRs' else "estados_Unidos"))
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
         response = requests.get(url=url,headers=headers)
         if response.status_code != 200:
