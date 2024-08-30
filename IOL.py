@@ -99,9 +99,7 @@ class TokenManager:
                 if response.status_code != 200:
                     raise Exception(f"Error fetching {ticker} quotes: {response.text}")
             except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
-        st.write(response)
-        st.write(response.json())
-        df=pd.DataFrame(response.json()['titulos'])
+        df=pd.DataFrame(response.json())
         st.write(df)
         df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
         df=df.rename(columns={'variacionPorcentual':'Var%'})
