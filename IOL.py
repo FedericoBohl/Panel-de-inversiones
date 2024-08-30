@@ -16,6 +16,7 @@ class TokenManager:
         self.base_url = 'https://api.invertironline.com/api/v2'
         self.portfolio_url = f'{self.base_url}/portafolio'
         self.quotes_url = f'{self.base_url}/Cotizaciones/{{instrument}}/{{country}}/Todos'
+        self.his_url = f'{self.base_url}/bCBA/Titulos/{{ticker}}/Cotizacion/seriehistorica/2023-01-01/{{date}}/sinAjustar'
         self.get_new_token()
 
     def load_user_data(self):
@@ -86,7 +87,23 @@ class TokenManager:
         df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
         df=df.rename(columns={'variacionPorcentual':'Var%'})
         return df
-    
+    def get_his(ticker):
+        self.ensure_token()
+        url = self.his_url.format(ticker=ticker,date=datetime.today().strftime('%Y-%m-%d'))
+        headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
+        response = requests.get(url=url,headers=headers)
+        if response.status_code != 200:
+            try:
+                self.refresh_token()
+                response = requests.get(url=url,headers=headers)
+                if response.status_code != 200:
+                    raise Exception(f"Error fetching {ticker} quotes: {response.text}")
+            except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
+        df=pd.DataFrame(response.json()['titulos'])
+        st.write(df)
+        df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
+        df=df.rename(columns={'variacionPorcentual':'Var%'})
+        return df  
     def get_operaciones(self,acciones_now,cedears_now,titpub):
         self.ensure_token()
         operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
@@ -137,4 +154,4 @@ class TokenManager:
             kind.append(_)
         df['Tipo de Acción']=kind
         df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
-        return df
+        return df 
