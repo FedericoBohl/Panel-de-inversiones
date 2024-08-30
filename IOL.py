@@ -87,7 +87,7 @@ class TokenManager:
         df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
         df=df.rename(columns={'variacionPorcentual':'Var%'})
         return df
-    def get_his(ticker):
+    def get_his_data(self,ticker):
         self.ensure_token()
         url = self.his_url.format(ticker=ticker,date=datetime.today().strftime('%Y-%m-%d'))
         headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
