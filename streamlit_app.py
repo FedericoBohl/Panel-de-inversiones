@@ -118,6 +118,7 @@ def calcular_proffit_acciones(his_op,_now):
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
     profit_acciones['Monto']=montos
+    st.write(profit_acciones)
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
@@ -201,6 +202,7 @@ with st.sidebar:
     try:
         S.iol:TokenManager=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
+        st.write(S.iol.token_info)
     except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
@@ -339,8 +341,5 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 #profit_cedears['Ganancia Real']=0 
 
 
-st.write(S.acciones_now)
-st.write(S.cedears_now)
-st.write(S.titpub)
 
-st.write(S.iol.get_quotes('aDRs'))
+
