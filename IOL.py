@@ -98,6 +98,7 @@ class TokenManager:
         st.write(df)
         df['fechaOperada']=pd.to_datetime(df['fechaOperada'], errors='coerce')
         df['fechaOrden']=pd.to_datetime(df['fechaOperada'], errors='coerce')
+        st.write(df)
         #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         #df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
