@@ -95,10 +95,8 @@ class TokenManager:
         if response.status_code != 200:
             raise Exception(f"Error fetching portfolio: {response.text}")
         df=pd.DataFrame(response.json())
-        st.write(df)
         df['fechaOperada'] = pd.to_datetime(df['fechaOperada'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
         df['fechaOrden'] = pd.to_datetime(df['fechaOrden'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
-        st.write(df)
         #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
         #df = df[df['fechaOperada'].notna()]
         #Ajuste por los BOPREALES
@@ -115,14 +113,12 @@ class TokenManager:
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'fechaOperada'] = pd.Timestamp('2024-03-01')
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
-
         precios = {
             'BPOA7': 85000,
             'BPOB7': 75000,
             'BPOC7': 65000,
             'BPOD7': 58000
         }
-
         # Actualizar las filas de los nuevos bonos a "Compra" con sus precios y montos
         for simbolo, precio in precios.items():
             filtro_bono = filtro & (df['simbolo'] == simbolo)
@@ -140,6 +136,5 @@ class TokenManager:
             _='Accion' if i[2] in acciones_now['simbolo'].to_list() else ('Cedear' if i[2] in cedears_now['simbolo'].to_list() else ('Bono' if i[2] in titpub['simbolo'].to_list() else None))
             kind.append(_)
         df['Tipo de Acción']=kind
-        st.write(df)
         df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
         return df

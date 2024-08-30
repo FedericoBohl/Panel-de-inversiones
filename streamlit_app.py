@@ -202,7 +202,6 @@ with st.sidebar:
     try:
         S.iol:TokenManager=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
-        st.write(S.iol.token_info)
     except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
