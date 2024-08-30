@@ -99,9 +99,11 @@ class TokenManager:
                 if response.status_code != 200:
                     raise Exception(f"Error fetching {ticker} quotes: {response.text}")
             except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
+        st.write(len(response.json()))
+        st.write(response.json())
         df=pd.DataFrame(response.json())
         st.write(df)
-        df=df[['ultimoPrecio']]
+        df=df[['ultimoPrecio','fechaHora']]
         return df  
     
     def get_operaciones(self,acciones_now,cedears_now,titpub):
