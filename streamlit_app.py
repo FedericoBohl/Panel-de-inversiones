@@ -343,3 +343,4 @@ st.write(S.acciones_now)
 st.write(S.cedears_now)
 st.write(S.titpub)
 
+st.write(S.iol.get_quotes('aDRs'))
