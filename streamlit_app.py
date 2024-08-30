@@ -348,11 +348,38 @@ fail=[]
 tickers={
     'YPFD':'YPF',
     'PAMP':'PAM',
-    "BRKB":'BRK.B'
+    "BRKB":'BRK.B',
+    'TGSU2':'TGS',
+    'TECO2':'TEO',
+    'AE38':'AE38D',
+    'AL29':'AL29D',
+    'AL30':'AL30D',
+    'AL35':'AL35D',
+    'AL41':'AL41D',
+    'CO26':'CO26D',
+    'GD29':'GD29D',
+    'GD30':'GD30D',
+    'GD35':'GD35D',
+    'GD38':'GD38D',
+    'GD41':'GD41D',
+    'GD46':'GD46D',
+    'T2X5':'T2X5D',
+    'T4X4':'T4X4D',
+    'TX26':'TX26D',
+    'TX28':'TX28D',
+    'BPOA7':'BPA7D',
+    'BPOB7':'BPB7D',
+    'BPOC7':'BPC7D',
+    'BPOD7':'BPD7D',
+    'BPJ25':'BPJ5D',
+    'BPY26':'BPY6D'
 }
+
+st.write(S.iol.get_his('BPA7D'))
+
 for simbol in S.operaciones['Simbolo'].unique():
     #st.subheader(simbol)
-    data = yf.download(simbol, start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
+    data = yf.download(simbol if not simbol in tickers.keys() else tickers[simbol], start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
     if len(data)==0:
         data = yf.download(f'{simbol}D', start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
         if len(data)==0:
