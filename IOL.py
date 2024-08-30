@@ -101,8 +101,7 @@ class TokenManager:
             except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
         df=pd.DataFrame(response.json())
         st.write(df)
-        df=df[['simbolo','ultimoPrecio','variacionPorcentual']]
-        df=df.rename(columns={'variacionPorcentual':'Var%'})
+        df=df[['ultimoPrecio']]
         return df  
     
     def get_operaciones(self,acciones_now,cedears_now,titpub):
