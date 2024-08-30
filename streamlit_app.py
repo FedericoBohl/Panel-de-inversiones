@@ -344,4 +344,4 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 
-st.write(S.operaciones)
+st.write(S.operaciones['Simbolo'].unique())
