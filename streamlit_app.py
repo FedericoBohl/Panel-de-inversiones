@@ -190,6 +190,9 @@ def calcular_proffit_bonos(his_op,_now_):
     montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
     profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
+
+
+
 with st.sidebar:
     with st.form('Login',border=False):
         st.text_input('Usuario',key='username')
@@ -219,7 +222,7 @@ if 'iol' in S:
             hovertemplate="<br>".join([
             "<b><b>%{label}",
             "<b>Valorizado<b>: %{customdata[0]} (%{value}%)",
-            "<b>Variazión<b>: %{customdata[1]}%"
+            "<b>Variación<b>: %{customdata[1]}%"
             ])
             )
             fig.update_layout(margin=dict(l=1, r=1, t=75, b=1),height=600)
@@ -252,11 +255,11 @@ if 'iol' in S:
                 c22.subheader(':red[Top Losers]')
                 for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
                     c22.caption(f"* {i[2]}:  {i[0]}%")
-
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
             _now_=S.acciones_now.copy()
+            st.write(_now_)
             _now_.set_index('simbolo',inplace=True)
             prof_acc=calcular_proffit_acciones(S.operaciones,_now_)
             c1,c2=st.columns(2)
