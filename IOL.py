@@ -139,5 +139,6 @@ class TokenManager:
             _='Accion' if i[2] in acciones_now['simbolo'].to_list() else ('Cedear' if i[2] in cedears_now['simbolo'].to_list() else ('Bono' if i[2] in titpub['simbolo'].to_list() else None))
             kind.append(_)
         df['Tipo de Acción']=kind
+        st.write(df)
         df.columns=['Tipo Transacción','Fecha Liquidación','Simbolo','Cantidad','Monto','Precio Ponderado','Tipo de Acción']
         return df
