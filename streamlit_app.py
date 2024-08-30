@@ -111,7 +111,7 @@ def calcular_proffit_acciones(his_op,_now):
         else:
             profit_acciones.at[row['Simbolo'],'Cantidad']-=row['Cantidad']
             #profit_acciones.at[row['Simbolo'],'Ganancia']+=(row['Cantidad']*(_now_.loc[row['Simbolo'],'ultimoPrecio']-row['Precio Ponderado']))
-    st.write(profit_acciones['Ganancia%'])
+    st.write(profit_acciones['Ganancia%'][0])
     for i in range(len(profit_acciones.index)):
         if profit_acciones.iloc[i]['Cantidad'] != 0:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
@@ -262,7 +262,6 @@ if 'iol' in S:
             st.plotly_chart(fig,use_container_width=True)
             _now_=S.acciones_now.copy()
             _now_.set_index('simbolo',inplace=True)
-            st.write(S.operaciones)
             prof_acc=calcular_proffit_acciones(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
