@@ -119,7 +119,6 @@ def calcular_proffit_acciones(his_op,_now):
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
     profit_acciones['Monto']=montos
-    st.write(profit_acciones)
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
@@ -326,22 +325,6 @@ if 'iol' in S:
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
-#his_bonos=his_op[his_op['Tipo de Acción']=='Bono']
-#his_cedears=his_op[his_op['Tipo de Acción']=='Cedear']
-
-#profit_bonos=pd.DataFrame(index=his_bonos['simbolo'].unique())
-#profit_bonos['Cantidad']=0
-#profit_bonos['Monto']=0
-#profit_bonos['Ganancia']=0
-#profit_bonos['Ganancia Real']=0
-
-#profit_cedears=pd.DataFrame(index=his_cedears['simbolo'].unique())
-#profit_cedears['Cantidad']=0
-#profit_cedears['Monto']=0
-#profit_cedears['Ganancia']=0
-#profit_cedears['Ganancia Real']=0 
-
-
 
 
 fail=[]
@@ -374,13 +357,3 @@ tickers={
     'BPJ25':'BPJ5D',
     'BPY26':'BPY6D'
 }
-#st.write(S.iol.get_his('BPA7D'))
-
-for simbol in S.operaciones['Simbolo'].unique():
-    #st.subheader(simbol)
-    data = yf.download(simbol if not simbol in tickers.keys() else tickers[simbol], start='2023-01-01', end=datetime.today().strftime('%Y-%m-%d'))
-    if len(data)==0:
-        fail.append(simbol)
-    #st.write(data)
-    #st.divider()
-st.write(fail)
