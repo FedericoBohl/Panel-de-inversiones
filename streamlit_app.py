@@ -456,6 +456,7 @@ if 'iol' in S:
             _now_.set_index('simbolo',inplace=True)
             st.write(S.operaciones)
             st.write(_now_)
+            st.write(S.port)
             prof_bonos=calcular_proffit_bonos(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
