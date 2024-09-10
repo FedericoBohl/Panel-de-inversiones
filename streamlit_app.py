@@ -442,16 +442,16 @@ if 'iol' in S:
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
-            df_val.index=pd.to_datetime(df_val.index,format="%Y-%m").strftime('%B del %Y')
+            vars_usd.index=pd.to_datetime(vars_usd.index,format="%Y-%m").strftime('%B del %Y')
             c1,c2=st.columns(2)
             c1.subheader('Analisis por fecha')
-            c1.selectbox('date_selected',label_visibility='collapsed',options=df_val.index,key='date_selected',index=len(df_val.index)-1)
-            valores=vars_usd.iloc[S.date_selected].to_dict()
+            c1.selectbox('date_selected',label_visibility='collapsed',options=vars_usd.index,key='date_selected',index=len(vars_usd)-1)
+            valores=vars_usd.loc[S.date_selected].to_dict()
             _=df_val.copy()
             for i in _.columns:
                 _[i]=_[i]/_['Portfolio']
             _.drop(columns=['Portfolio'],inplace=True)
-            ponderaciones=_.iloc[S.date_selected].to_dict()    
+            ponderaciones=_.loc[S.date_selected].to_dict()    
             labels = list(valores.keys())
             sizes = [ponderaciones[s] for s in labels]
             colors = [valores[s] for s in labels]
@@ -473,10 +473,10 @@ if 'iol' in S:
             c2.subheader('Analisis por activo')
             c2.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
             fig=go.Figure()
-            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
-            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
-            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd[S.ticker_selected]*100,name=S.ticker_selected,marker_color='crimson',mode='lines'))
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='#C080C0',mode='lines'))
+            fig.add_trace(go.Scatter(x=df_val.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
+            fig.add_trace(go.Scatter(x=df_val.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
+            fig.add_trace(go.Scatter(x=df_val.index,y=vars_usd[S.ticker_selected]*100,name=S.ticker_selected,marker_color='crimson',mode='lines'))
+            fig.add_trace(go.Scatter(x=df_val.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='#C080C0',mode='lines'))
             fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
             fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                                 orientation="h",
