@@ -335,7 +335,7 @@ def rendimiento_portfolio(now):
     var_pond['Portfolio']=[sum(var_pond.loc[x]) for x in var_pond.index]
 
     fig=make_subplots(specs=[[{"secondary_y": True}]])
-    fig.add_trace(go.Scatter(x=df_val.index,y=df_val['Portfolio'],name='Portfolio',marker_color='goldenrod'),secondary_y=False)
+    fig.add_trace(go.Bar(x=df_val.index,y=df_val['Portfolio'],name='Portfolio',marker_color='goldenrod'),secondary_y=False)
     fig.add_trace(go.Scatter(x=spy.index,y=spy*100,name='SPY',marker_color='royalblue',mode='lines'),secondary_y=True)
     fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Rendimiento Portfolio',marker_color='crimson',mode='lines'),secondary_y=True)
     fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
