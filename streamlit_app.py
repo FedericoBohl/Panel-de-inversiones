@@ -9,6 +9,9 @@ import plotly.express as px
 import openpyxl
 from datetime import datetime
 import yfinance as yf
+import math
+import requests
+from bs4 import BeautifulSoup
 
 from IOL import TokenManager
 
@@ -192,6 +195,151 @@ def calcular_proffit_bonos(his_op,_now_):
     profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
 
+@st.cache_data(show_spinner=False)
+def rendimiento_portfolio():
+    op_hist=S.iol.get_operaciones_hist()
+    op_hist=op_hist.copy()
+    ratios={'JPM':3,
+            'AAPL':2,
+            'MELI':2,
+            'VIST':3}
+    fecha_limite = pd.Timestamp('2024-01-26')
+    for ticker in ratios.keys():
+        filtro = (op_hist['simbolo'] == ticker) & (op_hist['fechaOperada'] < fecha_limite)
+        op_hist.loc[filtro, 'cantidadOperada'] *= ratios[ticker]
+    tickers={
+        'YPFD':'YPF',
+        'PAMP':'PAM',
+        "BRKB":'BRK-B',
+        'TGSU2':'TGS',
+        'TECO2':'TEO',
+        'AE38':'AE38D',
+        'AL29':'AL29D',
+        'AL30':'AL30D',
+        'AL35':'AL35D',
+        'AL41':'AL41D',
+        'CO26':'CO26D',
+        'GD29':'GD29D',
+        'GD30':'GD30D',
+        'GD35':'GD35D',
+        'GD38':'GD38D',
+        'GD41':'GD41D',
+        'GD46':'GD46D',
+        'T2X5':'T2X5D',
+        'T4X4':'T4X4D',
+        'TX26':'TX26D',
+        'TX28':'TX28D',
+        'BPOA7':'BPA7D',
+        'BPOB7':'BPB7D',
+        'BPOC7':'BPC7D',
+        'BPOD7':'BPD7D',
+        'BPJ25':'BPJ5D',
+        'BPY26':'BPY6D'
+    }
+
+    tickers_usd={}
+    vars_usd={}
+    fails=[]
+    for ticker in op_hist['simbolo'].unique():
+        try:
+            data = yf.download(ticker if ticker not in tickers.keys() else tickers[ticker], start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d")
+            precios_mensuales = data['Adj Close'].resample('M').last()
+            tickers_usd[ticker]=precios_mensuales
+            open_=data['Open'].resample('M').first()
+            close_=data['Close'].resample('M').last()
+            vars_usd[ticker]=close_/open_-1
+        except:
+            fails.append(ticker)
+            continue
+    op_hist['fechaOperada']=[x.strftime('%Y-%m')for x in op_hist['fechaOperada']]
+    op_hist['cantidadOperada']=[op_hist.loc[x]['cantidadOperada'] if op_hist.loc[x]['tipo']=='Compra' else -op_hist.loc[x]['cantidadOperada'] for x in op_hist.index]
+    op_hist=op_hist.groupby(by=['fechaOperada','simbolo'])[['cantidadOperada']].sum()
+    df = pd.DataFrame(index=pd.date_range(start="2023-01-01", end=pd.Timestamp.today(), freq='M'), columns=[s for s in op_hist['simbolo'].unique()])
+    df.index=[x.strftime('%Y-%m') for x in df.index]
+    df=df.loc[op_hist.index[0][0]:]
+    for ind in op_hist.index:
+        df.at[ind[0],ind[1]]=op_hist.loc[ind][['cantidadOperada']].sum()
+    df_acum={}
+    for col in df.columns:
+        acumulado = 0
+        valores_acumulados=[]
+        # Iterar sobre la lista
+        for valor in df[col]:
+            if not math.isnan(valor):
+                acumulado += valor
+            # Agregar el valor acumulado actual a la lista
+            valores_acumulados.append(acumulado)
+        df_acum[col]=valores_acumulados
+    df_acum=pd.DataFrame(df_acum,index=df.index)
+    response=requests.get('https://marcosemmi.com/ratios-de-cedears/')
+    soup=BeautifulSoup(response.text,'html.parser')
+    table=soup.find('table')
+    rows = []
+    for tr in table.find_all('tr'):
+        cells = tr.find_all('td')
+        row = [cell.get_text(strip=True) for cell in cells]
+        if row:  # Ignorar filas vacías
+            rows.append(row)
+    ratios=pd.DataFrame(rows,columns=['ticker','nombre','cod bolsa','ratio','ticker-usd','area'])
+    ratios['ratio']=[float(x.split(':')[0]) for x in ratios['ratio']]
+    ratios.set_index('ticker',inplace=True)
+    ratios=ratios['ratio']
+    cantXaccion = {
+        'PAMP': 25,
+        'YPFD': 1,
+        'GGAL': 10,
+        'CEPU': 10,
+        'COME': 1,
+        'TGSU2': 5,
+        'CRES': 10,
+        'EDN': 20,
+        'LOMA': 5,
+        'BMA': 10,
+        'BBAR': 3,
+        'SUPV': 5,
+        'IRSA': 10,
+        'TECO2': 5,
+        'TS': 2,
+        'IRCP': 4,
+        'SPY': 20,
+        'QQQ':20,
+        'DIA':20,
+        'IWM':10
+    }
+    price_usd=pd.DataFrame(tickers_usd)
+    price_usd.index=[x.strftime('%Y-%m') for x in price_usd.index]
+    price_usd=price_usd.loc[op_hist.index[0][0]:]
+    for col in price_usd.columns:
+        if col in cantXaccion.keys():
+            price_usd[col]=price_usd[col]/cantXaccion[col]
+        elif col in ratios.index:
+            price_usd[col]=price_usd[col]/ratios[col]
+    df_val=df_acum.copy()[price_usd.columns]  #CUANDO CONSIGA DATOS DE BONOS DEBERÍA IR "df.columns"
+    for col in df_val.columns:
+        for ind in df_val.index:
+            df_val.at[ind,col]=df_acum.at[ind,col]*price_usd.at[ind,col]
+    df_val['Portfolio']=[sum(df_val.loc[x]) for x in df_val.index]
+    vars_usd=pd.DataFrame(vars_usd)
+    vars_usd.index=[x.strftime('%Y-%m') for x in vars_usd.index]
+    vars_usd=vars_usd.loc[op_hist.index[0][0]:]
+    spy=vars_usd['SPY']
+    var_pond=df_val.copy()
+    for col in var_pond.columns:
+        var_pond[col]=var_pond[col]/var_pond['Portfolio']
+    var_pond=var_pond.drop(columns=['Portfolio'])
+    for ind in var_pond.index:
+        for col in var_pond.columns:
+            var_pond.at[ind,col]*=vars_usd.at[ind,col]
+    var_pond['Portfolio']=[sum(var_pond.loc[x]) for x in var_pond.index]
+
+    fig=go.Figure()
+    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio'],name='Portfolio'))
+    fig.add_trace(go.Scatter(x=spy.index,y=spy,name='SPY'))
+    
+    return st.plotly_chart(fig,use_container_width=True)
+
+
+
 
 
 with st.sidebar:
@@ -256,6 +404,8 @@ if 'iol' in S:
                 c22.subheader(':red[Top Losers]')
                 for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
                     c22.caption(f"* {i[2]}:  {i[0]}%")
+            
+            rendimiento_portfolio()
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
@@ -304,6 +454,8 @@ if 'iol' in S:
         with t_bon:
             _now_=S.titpub.copy()
             _now_.set_index('simbolo',inplace=True)
+            st.write(S.operaciones)
+            st.write(_now_)
             prof_bonos=calcular_proffit_bonos(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
@@ -324,36 +476,3 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
-
-
-
-fail=[]
-tickers={
-    'YPFD':'YPF',
-    'PAMP':'PAM',
-    "BRKB":'BRK.B',
-    'TGSU2':'TGS',
-    'TECO2':'TEO',
-    'AE38':'AE38D',
-    'AL29':'AL29D',
-    'AL30':'AL30D',
-    'AL35':'AL35D',
-    'AL41':'AL41D',
-    'CO26':'CO26D',
-    'GD29':'GD29D',
-    'GD30':'GD30D',
-    'GD35':'GD35D',
-    'GD38':'GD38D',
-    'GD41':'GD41D',
-    'GD46':'GD46D',
-    'T2X5':'T2X5D',
-    'T4X4':'T4X4D',
-    'TX26':'TX26D',
-    'TX28':'TX28D',
-    'BPOA7':'BPA7D',
-    'BPOB7':'BPB7D',
-    'BPOC7':'BPC7D',
-    'BPOD7':'BPD7D',
-    'BPJ25':'BPJ5D',
-    'BPY26':'BPY6D'
-}

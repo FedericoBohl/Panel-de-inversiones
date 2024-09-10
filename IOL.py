@@ -3,9 +3,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 import streamlit as st
 
-
 class TokenManager:
-    def __init__(self, username,password):
+    def __init__(self, username='Fedebohl',password='Fedecapo_01'):
         self.token_info = None
         self.user_data={
                         'username':username,
@@ -99,12 +98,55 @@ class TokenManager:
                 if response.status_code != 200:
                     raise Exception(f"Error fetching {ticker} quotes: {response.text}")
             except: raise Exception(f"Error fetching {ticker} quotes: {response.text}")
-        st.write(len(response.json()))
-        st.write(response.json())
         df=pd.DataFrame(response.json())
-        st.write(df)
         df=df[['ultimoPrecio','fechaHora']]
         return df  
+    
+    def get_operaciones_hist(self):
+        self.ensure_token()
+        operaciones_url = f"{self.base_url}/operaciones?filtro.estado=todas&filtro.fechaDesde=2020-01-01&filtro.fechaHasta={datetime.today().strftime('%Y-%m-%d')}&filtro.pais=argentina"
+        headers = {'Authorization': f"Bearer {self.token_info['access_token']}"}
+        response = requests.get(operaciones_url, headers=headers)
+        if response.status_code != 200:
+            raise Exception(f"Error fetching portfolio: {response.text}")
+        df=pd.DataFrame(response.json())
+        df['fechaOperada'] = pd.to_datetime(df['fechaOperada'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
+        df['fechaOrden'] = pd.to_datetime(df['fechaOrden'].str.split('T').str[0], format='%Y-%m-%d', errors='coerce')
+        #df['fechaOperada']=df['fechaOperada'].dt.strftime('%Y-%m-%d')
+        #df = df[df['fechaOperada'].notna()]
+        #Ajuste por los BOPREALES
+        filtro = (df['tipo'] == 'Pago de Amortización')
+        cantidad_vendida=0
+        filtered_df = df[(df['simbolo'] == 'BPO27') & (df['fechaOperada'] < pd.Timestamp('2024-03-01'))]
+        for index, row in filtered_df.iterrows():
+            if row['tipo'] == 'Compra':
+                cantidad_vendida += row['cantidadOperada']
+            elif row['tipo'] == 'Venta':
+                cantidad_vendida -= row['cantidadOperada']
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'cantidadOperada'] = cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 71000
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'fechaOperada'] = pd.Timestamp('2024-03-01')
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
+        precios = {
+            'BPOA7': 85000,
+            'BPOB7': 75000,
+            'BPOC7': 65000,
+            'BPOD7': 58000
+        }
+        # Actualizar las filas de los nuevos bonos a "Compra" con sus precios y montos
+        for simbolo, precio in precios.items():
+            filtro_bono = filtro & (df['simbolo'] == simbolo)
+            df.loc[filtro_bono, 'precioOperado'] = precio
+            df.loc[filtro_bono, 'montoOperado'] = precio * df.loc[filtro_bono, 'cantidadOperada']
+            df.loc[filtro_bono, 'fechaOperada'] = pd.Timestamp('2024-03-01')
+            df.loc[filtro_bono, 'tipo'] = 'Compra'
+
+        df=df[df['tipo'].isin(['Compra', 'Venta'])]
+        df=df[df['estado']=='terminada']
+        df=df[['tipo','fechaOperada','simbolo','cantidadOperada','montoOperado','precioOperado']]
+        df=df.sort_values(by='fechaOperada', ascending=True)
+        return df
     
     def get_operaciones(self,acciones_now,cedears_now,titpub):
         self.ensure_token()
