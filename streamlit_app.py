@@ -191,12 +191,12 @@ def calcular_proffit_bonos(his_op,_now_):
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
     profit_acciones=profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
-    
-    st.write(profit_acciones)
     montos=[]
     for i in profit_acciones.index:
         montos.append(S.port[S.port['simbolo']==i]['valorizado'].sum())
     profit_acciones['Monto']=montos
+    st.write(profit_acciones)
+
     return profit_acciones[profit_acciones['Cantidad']>0]
 
 #@st.cache_data(show_spinner=False)
