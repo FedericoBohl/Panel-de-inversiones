@@ -239,7 +239,8 @@ def rendimiento_portfolio():
     tickers_usd={}
     vars_usd={}
     fails=[]
-    for ticker in op_hist['simbolo'].unique():
+    uniques=op_hist['simbolo'].unique()
+    for ticker in uniques:
         try:
             data = yf.download(ticker if ticker not in tickers.keys() else tickers[ticker], start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d")
             precios_mensuales = data['Adj Close'].resample('M').last()
@@ -253,7 +254,7 @@ def rendimiento_portfolio():
     op_hist['fechaOperada']=[x.strftime('%Y-%m')for x in op_hist['fechaOperada']]
     op_hist['cantidadOperada']=[op_hist.loc[x]['cantidadOperada'] if op_hist.loc[x]['tipo']=='Compra' else -op_hist.loc[x]['cantidadOperada'] for x in op_hist.index]
     op_hist=op_hist.groupby(by=['fechaOperada','simbolo'])[['cantidadOperada']].sum()
-    df = pd.DataFrame(index=pd.date_range(start="2023-01-01", end=pd.Timestamp.today(), freq='M'), columns=[s for s in op_hist['simbolo'].unique()])
+    df = pd.DataFrame(index=pd.date_range(start="2023-01-01", end=pd.Timestamp.today(), freq='M'), columns=[s for s in uniques])
     df.index=[x.strftime('%Y-%m') for x in df.index]
     df=df.loc[op_hist.index[0][0]:]
     for ind in op_hist.index:

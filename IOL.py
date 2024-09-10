@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 
 class TokenManager:
-    def __init__(self, username='Fedebohl',password='Fedecapo_01'):
+    def __init__(self, username,password):
         self.token_info = None
         self.user_data={
                         'username':username,
