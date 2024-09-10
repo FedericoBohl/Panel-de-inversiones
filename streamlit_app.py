@@ -368,7 +368,7 @@ def rendimiento_portfolio(now):
         c22.subheader('S&P 500')
         c22.metric('Ganancia Promedio',f'{spy.mean()*100:.2f}%')
         c22.metric('Volatilidad',f'{spy.std()*100:.2f}%')
-        c22.metric('Sharpe Ratio',f'{(spy.mean()/spy.std())*100:.2f}%')
+        c22.metric('Sharpe Ratio',f'{(spy.mean()/spy.std())*100:.2f}%') 
 
         
 
