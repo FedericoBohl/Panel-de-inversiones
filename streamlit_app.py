@@ -446,12 +446,12 @@ if 'iol' in S:
             c1,c2=st.columns(2)
             c1.subheader('Analisis por fecha')
             c1.selectbox('date_selected',label_visibility='collapsed',options=df_val.index,key='date_selected',index=len(df_val.index)-1)
-            valores=vars_usd.loc[S.date_selected].to_dict()
+            valores=vars_usd.iloc[S.date_selected].to_dict()
             _=df_val.copy()
             for i in _.columns:
                 _[i]=_[i]/_['Portfolio']
             _.drop(columns=['Portfolio'],inplace=True)
-            ponderaciones=_.loc[S.date_selected].to_dict()    
+            ponderaciones=_.iloc[S.date_selected].to_dict()    
             labels = list(valores.keys())
             sizes = [ponderaciones[s] for s in labels]
             colors = [valores[s] for s in labels]
