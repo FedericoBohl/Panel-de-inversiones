@@ -338,7 +338,7 @@ def rendimiento_portfolio(now):
     fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio'],name='Portfolio'))
     fig.add_trace(go.Scatter(x=spy.index,y=spy,name='SPY'))
     
-    return st.plotly_chart(fig,use_container_width=True)
+    st.plotly_chart(fig,use_container_width=True)
 
 
 
