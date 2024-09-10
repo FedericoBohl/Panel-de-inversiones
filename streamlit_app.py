@@ -166,7 +166,6 @@ def calcular_proffit_cedears(his_op,_now):
 @st.cache_data(show_spinner=False)
 def calcular_proffit_bonos(his_op,_now_):
     his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
-    st.write(his_acciones)
     his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']/100
     _now_['ultimoPrecio']=_now_['ultimoPrecio']/100
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
@@ -195,12 +194,10 @@ def calcular_proffit_bonos(his_op,_now_):
     for i in profit_acciones.index:
         montos.append(S.port[S.port['simbolo']==i]['valorizado'].sum())
     profit_acciones['Monto']=montos
-    st.write(profit_acciones)
-
     return profit_acciones[profit_acciones['Cantidad']>0]
 
-#@st.cache_data(show_spinner=False)
-def rendimiento_portfolio():
+@st.cache_data(show_spinner=False)
+def rendimiento_portfolio(now):
     op_hist=S.iol.get_operaciones_hist()
     op_hist=op_hist.copy()
     ratios={'JPM':3,
@@ -410,7 +407,7 @@ if 'iol' in S:
                 for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
-            rendimiento_portfolio()
+            rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
@@ -459,9 +456,6 @@ if 'iol' in S:
         with t_bon:
             _now_=S.titpub.copy()
             _now_.set_index('simbolo',inplace=True)
-            st.write(S.operaciones)
-            st.write(_now_)
-            st.write(S.port)
             prof_bonos=calcular_proffit_bonos(S.operaciones,_now_)
             c1,c2=st.columns(2)
             fig=go.Figure()
