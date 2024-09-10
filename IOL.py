@@ -124,8 +124,8 @@ class TokenManager:
             elif row['tipo'] == 'Venta':
                 cantidad_vendida -= row['cantidadOperada']
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'cantidadOperada'] = cantidad_vendida
-        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 71000
-        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 7100
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 7100*cantidad_vendida
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'fechaOperada'] = pd.Timestamp('2024-03-01')
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
         precios = {
