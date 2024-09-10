@@ -441,6 +441,10 @@ if 'iol' in S:
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
+            st.subheader('Analisis por fecha')
+            st.write(vars_usd.iloc[0])
+            
+            st.subheader('Analisis por activo')
             c1,c2=st.columns(2)
             c1.write(df_val)
             c2.write(var_pond)
