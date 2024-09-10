@@ -368,7 +368,8 @@ def rendimiento_portfolio(now):
         c22.subheader(':blue-background[S&P 500]')
         c22.metric(':blue[Ganancia Promedio]',f'{spy.mean()*100:.2f}%')
         c22.metric(':blue[Volatilidad]',f'{spy.std()*100:.2f}%')
-        c22.metric(':blue[Sharpe Ratio]',f'{(spy.mean()/spy.std())*100:.2f}%') 
+        c22.metric(':blue[Sharpe Ratio]',f'{(spy.mean()/spy.std())*100:.2f}%')
+    return df_val, var_pond,price_usd,vars_usd
 
         
 
@@ -439,7 +440,12 @@ if 'iol' in S:
                 for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
-            rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
+            df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
+            c1,c2=st.columns(2)
+            c1.write(df_val)
+            c2.write_stream(var_pond)
+            c1.write(price_usd)
+            c2.write(vars_usd)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
