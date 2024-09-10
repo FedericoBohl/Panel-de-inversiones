@@ -461,6 +461,7 @@ if 'iol' in S:
                 labels=labels,
                 parents=[""] * len(labels),  # No hay jerarquía
                 values=sizes,
+                range_color =[-5,5],
                 marker=dict(
                     colors=colors,
                     colorscale='RdYlGn',  # Escala de color de rojo a verde
