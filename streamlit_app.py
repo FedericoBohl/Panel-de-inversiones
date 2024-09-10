@@ -442,36 +442,36 @@ if 'iol' in S:
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
-            vars_usd.index=pd.to_datetime(vars_usd.index,format="%Y-%m").strftime('%B del %Y')
+            df_val.index=pd.to_datetime(df_val.index,format="%Y-%m").strftime('%B del %Y')
             c1,c2=st.columns(2)
             c1.subheader('Analisis por fecha')
-            st.write(vars_usd.index)
-            valores=vars_usd.iloc[-1].to_dict()
+            c1.selectbox('date_selected',label_visibility='collapsed',options=df_val.index,key='date_selected',index=len(df_val))
+            valores=vars_usd.loc[S.date_selected].to_dict()
             _=df_val.copy()
             for i in _.columns:
                 _[i]=_[i]/_['Portfolio']
             _.drop(columns=['Portfolio'],inplace=True)
-            ponderaciones=_.iloc[-1].to_dict()    
+            ponderaciones=_.loc[S.date_selected].to_dict()    
             labels = list(valores.keys())
             sizes = [ponderaciones[s] for s in labels]
             colors = [valores[s] for s in labels]
             fig = go.Figure(go.Treemap(
                 labels=labels,
                 parents=[""] * len(labels),  # No hay jerarquía
-                values=sizes,
+                values=sizes*100,
                 marker=dict(
-                    colors=colors,
+                    colors=colors*100,
                     colorscale='RdYlGn',  # Escala de color de rojo a verde
                     colorbar=dict(title="Valor")
                 ),
-                hovertemplate='<b>%{label}</b><br>Ponderación: %{value}<br>Valor: %{color}<extra></extra>'
+                hovertemplate='<b>%{label}</b><br>Ponderación: %{value:.2f}%<br>Valor: %{color:.2f}%<extra></extra>'
             ))
             fig.update_layout(
-                title="Treemap de Valores y Ponderaciones",
+                title=f"Rendimientos en {S.date_selected}",
             )
             c1.plotly_chart(fig,use_container_width=True)
             c2.subheader('Analisis por activo')
-            st.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
+            c2.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
             fig=go.Figure()
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
