@@ -455,14 +455,14 @@ if 'iol' in S:
             _.drop(columns=['Portfolio'],inplace=True)
             ponderaciones=_.loc[S.date_selected].to_dict()    
             labels = list(valores.keys())
-            sizes = [ponderaciones[s] for s in labels]
-            colors = [valores[s] for s in labels]
+            sizes = [ponderaciones[s]*100 for s in labels]
+            colors = [valores[s]*100 for s in labels]
             fig = go.Figure(go.Treemap(
                 labels=labels,
                 parents=[""] * len(labels),  # No hay jerarquía
-                values=sizes*100,
+                values=sizes,
                 marker=dict(
-                    colors=colors*100,
+                    colors=colors,
                     colorscale='RdYlGn',  # Escala de color de rojo a verde
                     colorbar=dict(title="Valor")
                 ),
