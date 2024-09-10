@@ -165,7 +165,7 @@ def calcular_proffit_cedears(his_op,_now):
 
 @st.cache_data(show_spinner=False)
 def calcular_proffit_bonos(his_op,_now_):
-    his_acciones=his_op[his_op['Tipo de Acción']=='Bonos']
+    his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
     st.write(his_acciones)
     his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']/100
     _now_['ultimoPrecio']=_now_['ultimoPrecio']/100
