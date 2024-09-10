@@ -470,11 +470,11 @@ if 'iol' in S:
             c1.plotly_chart(fig,use_container_width=True)
             c2.subheader('Analisis por activo')
             asset='VIST'
-            fig=make_subplots(specs=[[{"secondary_y": True}]])
-            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd[asset],name=asset,marker_color='crimson',mode='lines',legendgroup='asset',showlegend=True),secondary_y=False)
-            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd['SPY'],name='SPY',marker_color='lightslategray',mode='lines',legendgroup='spy',showlegend=True),secondary_y=False)
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond[asset]*100,name='var asset',marker_color='crimson',mode='lines',line=dict(dash='dashdot'),legendgroup='asset',showlegend=False),secondary_y=True)
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['SPY']*100,name='var spy',marker_color='lightslategray',mode='lines',legendgroup='spy',showlegend=False,line=dict(dash='dashdot')),secondary_y=True)
+            fig=go.Figure()
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond[asset]*100,name=asset,marker_color='crimson',mode='lines'))
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='lavenderblush',mode='lines'))
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['SPY']*100,name='SPY',marker_color='mediumspringgreen',mode='lines',line=dict(dash='dashdot')))
+
             fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
             fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                                 orientation="h",
