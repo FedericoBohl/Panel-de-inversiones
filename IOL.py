@@ -170,15 +170,15 @@ class TokenManager:
             elif row['tipo'] == 'Venta':
                 cantidad_vendida -= row['cantidadOperada']
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'cantidadOperada'] = cantidad_vendida
-        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 71000
-        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 71000*cantidad_vendida
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'precioOperado'] = 7100
+        df.loc[(filtro & (df['simbolo']=='BPO27')), 'montoOperado'] = 7100*cantidad_vendida
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'fechaOperada'] = pd.Timestamp('2024-03-01')
         df.loc[(filtro & (df['simbolo']=='BPO27')), 'tipo'] = 'Venta'
         precios = {
-            'BPOA7': 85000,
-            'BPOB7': 75000,
-            'BPOC7': 65000,
-            'BPOD7': 58000
+            'BPOA7': 8500,
+            'BPOB7': 7500,
+            'BPOC7': 6500,
+            'BPOD7': 5800
         }
         # Actualizar las filas de los nuevos bonos a "Compra" con sus precios y montos
         for simbolo, precio in precios.items():
