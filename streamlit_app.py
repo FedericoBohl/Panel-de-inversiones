@@ -447,7 +447,7 @@ if 'iol' in S:
             for i in _.columns:
                 _[i]=_[i]/_['Portfolio']
             _.drop(columns=['Portfolio'],inplace=True)
-            st.write(_.iloc[0].to_dict())
+            st.write(_.iloc[-1].to_dict())
             
             st.subheader('Analisis por activo')
             c1,c2=st.columns(2)
