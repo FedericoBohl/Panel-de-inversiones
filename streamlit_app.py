@@ -194,7 +194,7 @@ def calcular_proffit_bonos(his_op,_now_):
     profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def rendimiento_portfolio():
     op_hist=S.iol.get_operaciones_hist()
     op_hist=op_hist.copy()
