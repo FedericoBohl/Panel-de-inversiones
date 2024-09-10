@@ -472,9 +472,9 @@ if 'iol' in S:
             asset='VIST'
             fig=make_subplots(specs=[[{"secondary_y": True}]])
             fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd[asset],name=asset,marker_color='crimson',mode='lines',legendgroup='asset',showlegend=True),secondary_y=False)
-            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd['SPY'],name='SPY',marker_color='lightsaygray',mode='lines',legendgroup='spy',showlegend=True),secondary_y=False)
+            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd['SPY'],name='SPY',marker_color='lightslategray',mode='lines',legendgroup='spy',showlegend=True),secondary_y=False)
             fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond[asset]*100,name='var asset',marker_color='crimson',mode='lines',line=dict(dash='dashdot'),legendgroup='asset',showlegend=False),secondary_y=True)
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['SPY']*100,name='var spy',marker_color='lightsaygray',mode='lines',legendgroup='spy',showlegend=False,line=dict(dash='dashdot')),secondary_y=True)
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['SPY']*100,name='var spy',marker_color='lightslategray',mode='lines',legendgroup='spy',showlegend=False,line=dict(dash='dashdot')),secondary_y=True)
             fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
             fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                                 orientation="h",
@@ -495,10 +495,6 @@ if 'iol' in S:
                                             'yanchor': 'top'}
                                             )
             c2.plotly_chart(fig,use_container_width=True)
-            c1.write(df_val)
-            c2.write(var_pond)
-            c1.write(price_usd)
-            c2.write(vars_usd)
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
