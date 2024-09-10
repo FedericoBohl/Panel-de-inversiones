@@ -357,7 +357,20 @@ def rendimiento_portfolio(now):
                                     'xanchor': 'center',
                                     'yanchor': 'top'}
                                     )
-    st.plotly_chart(fig,config={'displayModeBar': False},use_container_width=True)
+    c1,c2=st.columns(0.8,0.2)
+    c1.plotly_chart(fig,config={'displayModeBar': False},use_container_width=True)
+    with c2:
+        c21,c22=st.columns(2)
+        c21.subheader('Portfolio')
+        c21.metric('Ganancia Promedio',f'{var_pond['Portfolio'].mean()*100:.2f}%')
+        c21.metric('Volatilidad',f'{var_pond['Portfolio'].std()*100:.2f}%')
+        c21.metric('Sharpe Ratio',f'{(var_pond['Portfolio'].mean()/var_pond['Portfolio'].std())*100:.2f}%')
+        c22.subheader('S&P 500')
+        c22.metric('Ganancia Promedio',f'{spy.mean()*100:.2f}%')
+        c22.metric('Volatilidad',f'{spy.std()*100:.2f}%')
+        c22.metric('Sharpe Ratio',f'{(spy.mean()/spy.std())*100:.2f}%')
+
+        
 
 
 
