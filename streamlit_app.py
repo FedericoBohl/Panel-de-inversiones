@@ -357,7 +357,7 @@ def rendimiento_portfolio(now):
                                     'xanchor': 'center',
                                     'yanchor': 'top'}
                                     )
-    c1,c2=st.columns((0.8,0.2))
+    c1,c2=st.columns((0.6,0.4))
     c1.plotly_chart(fig,config={'displayModeBar': False},use_container_width=True)
     with c2:
         c21,c22=st.columns(2)
