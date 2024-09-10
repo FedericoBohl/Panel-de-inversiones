@@ -311,6 +311,7 @@ def rendimiento_portfolio(now):
     price_usd=pd.DataFrame(tickers_usd)
     price_usd.index=[x.strftime('%Y-%m') for x in price_usd.index]
     price_usd=price_usd.loc[op_hist.index[0][0]:]
+    price_usd_copy=price_usd.copy()
     for col in price_usd.columns:
         if col in cantXaccion.keys():
             price_usd[col]=price_usd[col]/cantXaccion[col]
@@ -369,7 +370,7 @@ def rendimiento_portfolio(now):
         c22.metric(':blue[Ganancia Promedio]',f'{spy.mean()*100:.2f}%')
         c22.metric(':blue[Volatilidad]',f'{spy.std()*100:.2f}%')
         c22.metric(':blue[Sharpe Ratio]',f'{(spy.mean()/spy.std())*100:.2f}%')
-    return df_val, var_pond,price_usd,vars_usd
+    return df_val, var_pond,price_usd_copy,vars_usd
 
         
 
@@ -441,16 +442,59 @@ if 'iol' in S:
                     c22.caption(f"* {i[2]}:  {i[0]}%")
             
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
-            st.subheader('Analisis por fecha')
-            st.write(vars_usd.iloc[0].to_dict())
+            c1,c2=st.columns(2)
+            c1.subheader('Analisis por fecha')
+            valores=vars_usd.iloc[-1].to_dict()
             _=df_val.copy()
             for i in _.columns:
                 _[i]=_[i]/_['Portfolio']
             _.drop(columns=['Portfolio'],inplace=True)
-            st.write(_.iloc[-1].to_dict())
-            
-            st.subheader('Analisis por activo')
-            c1,c2=st.columns(2)
+            ponderaciones=_.iloc[-1].to_dict()    
+            labels = list(valores.keys())
+            sizes = [ponderaciones[s] for s in labels]
+            colors = [valores[s] for s in labels]
+            fig = go.Figure(go.Treemap(
+                labels=labels,
+                parents=[""] * len(labels),  # No hay jerarquía
+                values=sizes,
+                marker=dict(
+                    colors=colors,
+                    colorscale='RdYlGn',  # Escala de color de rojo a verde
+                    colorbar=dict(title="Valor")
+                ),
+                hovertemplate='<b>%{label}</b><br>Ponderación: %{value}<br>Valor: %{color}<extra></extra>'
+            ))
+            fig.update_layout(
+                title="Treemap de Valores y Ponderaciones",
+            )
+            c1.plotly_chart(fig,use_container_width=True)
+            c2.subheader('Analisis por activo')
+            asset='VIST'
+            fig=make_subplots(specs=[[{"secondary_y": True}]])
+            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd[asset],name=asset,marker_color='crimson',mode='lines',legendgroup='asset',showlegend=True),secondary_y=False)
+            fig.add_trace(go.Scatter(x=price_usd.index,y=price_usd['SPY'],name='SPY',marker_color='lightsaygray',mode='lines',legendgroup='spy',showlegend=True),secondary_y=False)
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond[asset]*100,name='var asset',marker_color='crimson',mode='lines',line=dict(dash='dashdot'),legendgroup='asset',showlegend=False),secondary_y=True)
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['SPY']*100,name='var spy',marker_color='lightsaygray',mode='lines',legendgroup='spy',showlegend=False,line=dict(dash='dashdot')),secondary_y=True)
+            fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
+            fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
+                                                orientation="h",
+                                                yanchor="bottom",
+                                                y=-0.2,
+                                                xanchor="center",
+                                                x=0.5,
+                                                bordercolor='black',
+                                                borderwidth=2
+                                            ),
+                                            yaxis=dict(title="USD",showgrid=False, zeroline=False, showline=True),
+                                            yaxis2=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
+                                            title={
+                                            'text': f"Rendimiento {asset}",
+                                            'y':1,
+                                            'x':0.5,
+                                            'xanchor': 'center',
+                                            'yanchor': 'top'}
+                                            )
+            c2.plotly_chart(fig,use_container_width=True)
             c1.write(df_val)
             c2.write(var_pond)
             c1.write(price_usd)
