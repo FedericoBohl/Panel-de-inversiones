@@ -351,7 +351,7 @@ def rendimiento_portfolio(now):
                                     yaxis2=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
                                     title={
                                     'text': "Rendimiento de las acciones Argentinas y Extranjeras",
-                                    'y':-0.2,
+                                    'y':1,
                                     'x':0.5,
                                     'xanchor': 'center',
                                     'yanchor': 'top'}
