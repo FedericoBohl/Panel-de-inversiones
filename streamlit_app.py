@@ -334,11 +334,29 @@ def rendimiento_portfolio(now):
             var_pond.at[ind,col]*=vars_usd.at[ind,col]
     var_pond['Portfolio']=[sum(var_pond.loc[x]) for x in var_pond.index]
 
-    fig=go.Figure()
-    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio'],name='Portfolio'))
-    fig.add_trace(go.Scatter(x=spy.index,y=spy,name='SPY'))
-    
-    st.plotly_chart(fig,use_container_width=True)
+    fig=make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(go.Scatter(x=df_val.index,y=df_val['Portfolio'],name='Portfolio',marker_color='goldenrod'),secondary_y=False)
+    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Rendimiento Portfolio',marker_color='crimson',fill='tonexty',fillcolor='lightgreen'),secondary_y=True)
+    fig.add_trace(go.Scatter(x=spy.index,y=spy*100,name='SPY',marker_color='lightslategrey'),secondary_y=True)
+    fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
+                                        orientation="h",
+                                        yanchor="bottom",
+                                        y=-0.2,
+                                        xanchor="center",
+                                        x=0.5,
+                                        bordercolor='black',
+                                        borderwidth=2
+                                    ),
+                                    yaxis=dict(title="USD",showgrid=False, zeroline=False, showline=True),
+                                    yaxis2=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
+                                    title={
+                                    'text': "Rendimiento de las acciones Argentinas y Extranjeras",
+                                    'y':0.9,
+                                    'x':0.5,
+                                    'xanchor': 'center',
+                                    'yanchor': 'top'}
+                                    )
+    st.plotly_chart(fig,config={'displayModeBar': False},use_container_width=True)
 
 
 
