@@ -443,7 +443,7 @@ if 'iol' in S:
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
             c1,c2=st.columns(2)
             c1.write(df_val)
-            c2.write_stream(var_pond)
+            c2.write(var_pond)
             c1.write(price_usd)
             c2.write(vars_usd)
         with t_acc:
