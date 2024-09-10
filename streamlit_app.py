@@ -9,7 +9,6 @@ import plotly.express as px
 import openpyxl
 from datetime import datetime
 import yfinance as yf
-import math
 import requests
 from bs4 import BeautifulSoup
 
@@ -265,7 +264,7 @@ def rendimiento_portfolio():
         valores_acumulados=[]
         # Iterar sobre la lista
         for valor in df[col]:
-            if not math.isnan(valor):
+            if not np.isnan(valor):
                 acumulado += valor
             # Agregar el valor acumulado actual a la lista
             valores_acumulados.append(acumulado)

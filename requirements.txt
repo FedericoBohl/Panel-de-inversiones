@@ -5,6 +5,5 @@ plotly
 datetime
 openpyxl
 yfinance
-math
 bs4
 requests
