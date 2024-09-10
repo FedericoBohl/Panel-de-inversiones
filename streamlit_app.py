@@ -473,8 +473,8 @@ if 'iol' in S:
             fig=go.Figure()
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd[asset]*100,name=asset,marker_color='crimson',mode='lines'))
             fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='lavenderblush',mode='lines'))
-            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot')))
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',fillcolor='mediumspringgreen',fill='tonexty'))
+            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot')))
             fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
             fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                                 orientation="h",
