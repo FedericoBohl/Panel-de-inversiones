@@ -444,6 +444,7 @@ if 'iol' in S:
             df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
             c1,c2=st.columns(2)
             c1.subheader('Analisis por fecha')
+            st.write(vars_usd.index)
             valores=vars_usd.iloc[-1].to_dict()
             _=df_val.copy()
             for i in _.columns:
@@ -469,12 +470,12 @@ if 'iol' in S:
             )
             c1.plotly_chart(fig,use_container_width=True)
             c2.subheader('Analisis por activo')
-            asset='VIST'
+            st.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
             fig=go.Figure()
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
             fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
-            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd[asset]*100,name=asset,marker_color='crimson',mode='lines'))
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='lavender',mode='lines'))
+            fig.add_trace(go.Scatter(x=vars_usd.index,y=vars_usd[S.ticker_selected]*100,name=S.ticker_selected,marker_color='crimson',mode='lines'))
+            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='#C080C0',mode='lines'))
             fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
             fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                                 orientation="h",
@@ -487,7 +488,7 @@ if 'iol' in S:
                                             ),
                                             yaxis=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
                                             title={
-                                            'text': f"Rendimiento {asset}",
+                                            'text': f"Rendimiento {S.ticker_selected}",
                                             'y':1,
                                             'x':0.5,
                                             'xanchor': 'center',
