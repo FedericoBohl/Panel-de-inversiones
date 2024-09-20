@@ -579,9 +579,6 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 @st.cache_resource
 def get_driver():
     return webdriver.Chrome(
-        service=Service(
-            ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
-        ),
         options=options,
     )
 
