@@ -7,3 +7,4 @@ openpyxl
 yfinance
 bs4
 requests
+selenium
