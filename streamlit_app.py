@@ -12,11 +12,10 @@ import yfinance as yf
 import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
 
 from IOL import TokenManager
 
@@ -577,8 +576,20 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 
 
 
-options = Options() 
-options.add_argument("--headless=new")
-options.add_argument('--disable-gpu')
+@st.cache_resource
+def get_driver():
+    return webdriver.Chrome(
+        service=Service(
+            ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+        ),
+        options=options,
+    )
 
-driver = webdriver.Chrome(options=options)
+options = Options()
+options.add_argument("--disable-gpu")
+options.add_argument("--headless")
+
+driver = get_driver()
+driver.get("https://bolsar.info/Obligaciones_Negociables.php")
+
+st.code(driver.page_source)
