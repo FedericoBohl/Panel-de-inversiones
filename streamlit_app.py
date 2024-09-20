@@ -580,7 +580,12 @@ else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
 options = Options()
 options.add_argument("--disable-gpu")
 options.add_argument("--headless")
-driver = webdriver.Firefox()
+driver=webdriver.Chrome(
+            service=Service(
+                ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
+            ),
+            options=options,
+        )
 
 driver.get("https://bolsar.info/Obligaciones_Negociables.php")
 st.code(driver.page_source)
