@@ -11,6 +11,12 @@ from datetime import datetime
 import yfinance as yf
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 
 from IOL import TokenManager
 
@@ -568,3 +574,11 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
+
+
+
+options = Options() 
+options.add_argument("--headless=new")
+options.add_argument('--disable-gpu')
+
+driver = webdriver.Chrome(options=options)
