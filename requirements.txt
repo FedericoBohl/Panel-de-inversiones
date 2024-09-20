@@ -8,3 +8,4 @@ yfinance
 bs4
 requests
 selenium
+webdriver-manager==4.0.2
