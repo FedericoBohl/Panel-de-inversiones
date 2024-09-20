@@ -11,3 +11,4 @@ seleniumbase
 webdriver-manager
 chromium
 chromedriver
+chromium
