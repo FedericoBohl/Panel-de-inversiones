@@ -10,3 +10,4 @@ requests
 seleniumbase
 webdriver-manager
 chromium
+chromium-driver
