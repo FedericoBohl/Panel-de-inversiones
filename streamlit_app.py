@@ -204,7 +204,6 @@ def calcular_proffit_bonos(his_op,_now_):
 @st.cache_data(show_spinner=False)
 def rendimiento_portfolio(now):
     op_hist=S.iol.get_operaciones_hist()
-    op_hist=op_hist.copy()
     ratios={'JPM':3,
             'AAPL':2,
             'MELI':2,
