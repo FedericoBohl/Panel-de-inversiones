@@ -424,19 +424,26 @@ if 'iol' in S:
                 c21,c22=st.columns(2)
                 ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
                 fig=go.Figure()
-                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Acciones"},
-                                           domain = {'row': 0, 'column': 0}
-                                           ))
-                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
+                try:
+                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
+                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Acciones"},
+                                            domain = {'row': 0, 'column': 0}
+                                            ))
+                except:pass
+                try:
+                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Cedears"},
                                            domain = {'row': 0, 'column': 1}
                                            ))
-                fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
+                except:pass
+                try:
+                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Bonos"},
                                            domain = {'row': 0, 'column': 2}
                                            ))
-                fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
+                except:pass
+                try:    fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
+                except:pass
                 fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
                 st.plotly_chart(fig,use_container_width=True)
                 c21.subheader(':green[Top Winners]')
