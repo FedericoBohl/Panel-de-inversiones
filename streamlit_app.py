@@ -260,9 +260,13 @@ def rendimiento_portfolio(now):
     op_hist['fechaOperada']=[x.strftime('%Y-%m')for x in op_hist['fechaOperada']]
     op_hist['cantidadOperada']=[op_hist.loc[x]['cantidadOperada'] if op_hist.loc[x]['tipo']=='Compra' else -op_hist.loc[x]['cantidadOperada'] for x in op_hist.index]
     op_hist=op_hist.groupby(by=['fechaOperada','simbolo'])[['cantidadOperada']].sum()
-    df = pd.DataFrame(index=pd.date_range(start="2023-01-01", end=pd.Timestamp.today(), freq='M'), columns=[s for s in uniques])
+    
+    end_of_current_month = pd.Timestamp.today() + pd.offsets.MonthEnd(0)
+    df = pd.DataFrame(index=pd.date_range(start="2023-01-01", end=end_of_current_month, freq='M'), columns=[s for s in uniques])
+        
     df.index=[x.strftime('%Y-%m') for x in df.index]
     df=df.loc[op_hist.index[0][0]:]
+    
     for ind in op_hist.index:
         df.at[ind[0],ind[1]]=op_hist.loc[ind][['cantidadOperada']].sum()
     df_acum={}
@@ -390,7 +394,7 @@ with st.sidebar:
     try:
         S.iol:TokenManager=load_user_IOL(S.username,S.password)
         S.iol.get_new_token()
-        st.write(S.iol.token_info)
+        #st.write(S.iol.token_info)
     except:pass
 st.header('Monitor de Portafolio - :violet[IOL]',divider=True)
 #try:
@@ -458,7 +462,7 @@ if 'iol' in S:
 
             c1,c2=st.columns(2)
             c1.subheader('Analisis por fecha')
-            c1.selectbox('date_selected',label_visibility='collapsed',options=vars_usd.index,key='date_selected',index=len(vars_usd)-1)
+            c1.selectbox('date_selected',label_visibility='collapsed',options=vars_usd.index[::-1],key='date_selected',index=0)
             valores=vars_usd.loc[S.date_selected].to_dict()
             _=df_val.copy()
             for i in _.columns:
