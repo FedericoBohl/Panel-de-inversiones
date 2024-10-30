@@ -478,8 +478,8 @@ if 'iol' in S:
                 parents=[""] * len(labels),  # No hay jerarquía
                 values=sizes,
                 marker=dict(
-                    cmin=-var_pond['Portfolio'].mean()*100,
-                    cmax=var_pond['Portfolio'].mean()*100,
+                    cmin=np.percentile(colors,25)-1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
+                    cmax=np.percentile(colors,75)+1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
                     colors=colors,
                     colorscale='RdYlGn',  # Escala de color de rojo a verde
                     colorbar=dict(title="Valor")
@@ -518,8 +518,8 @@ if 'iol' in S:
             c2.plotly_chart(fig,use_container_width=True)
         st.write(var_pond['Portfolio'].max()*0.75*100)
         st.write(colors)
-        st.write(colors.max()*1.25)
-        st.write(colors.min()*0.75)
+        st.write(np.percentile(colors,75)+1.5*(np.percentile(colors,75)-np.percentile(colors,25)))
+        st.write(np.percentile(colors,25)-1.5*(np.percentile(colors,75)-np.percentile(colors,25)))
         
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
