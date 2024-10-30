@@ -251,6 +251,7 @@ def rendimiento_portfolio(now):
     for ticker in uniques:
         try:
             data = yf.download(ticker if ticker not in tickers.keys() else tickers[ticker], start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d")
+            st.write(data)
             precios_mensuales = data['Adj Close'].resample('M').last()
             tickers_usd[ticker]=precios_mensuales
             st.write(f'{ticker}----{precios_mensuales}')
@@ -260,7 +261,6 @@ def rendimiento_portfolio(now):
         except:
             fails.append(ticker)
             continue
-    st.write(data)
     op_hist['fechaOperada']=[x.strftime('%Y-%m')for x in op_hist['fechaOperada']]
     op_hist['cantidadOperada']=[op_hist.loc[x]['cantidadOperada'] if op_hist.loc[x]['tipo']=='Compra' else -op_hist.loc[x]['cantidadOperada'] for x in op_hist.index]
     op_hist=op_hist.groupby(by=['fechaOperada','simbolo'])[['cantidadOperada']].sum()
