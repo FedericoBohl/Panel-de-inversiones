@@ -478,8 +478,8 @@ if 'iol' in S:
                 parents=[""] * len(labels),  # No hay jerarquía
                 values=sizes,
                 marker=dict(
-                    cmin=-5,
-                    cmax=5,
+                    cmin=-var_pond['Portfolio'].mean()*100,
+                    cmax=var_pond['Portfolio'].mean()*100,
                     colors=colors,
                     colorscale='RdYlGn',  # Escala de color de rojo a verde
                     colorbar=dict(title="Valor")
