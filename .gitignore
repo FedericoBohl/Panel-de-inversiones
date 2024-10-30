@@ -1,0 +1,3 @@
+*.ipynb
+*.pyc
+.streamlit/secrets.toml
