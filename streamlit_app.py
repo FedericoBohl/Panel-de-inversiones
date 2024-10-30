@@ -246,11 +246,14 @@ def rendimiento_portfolio(now):
     vars_usd={}
     fails=[]
     uniques=op_hist['simbolo'].unique()
+    st.write("Uniques\n",uniques)
+    st.divider()
     for ticker in uniques:
         try:
             data = yf.download(ticker if ticker not in tickers.keys() else tickers[ticker], start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d")
             precios_mensuales = data['Adj Close'].resample('M').last()
             tickers_usd[ticker]=precios_mensuales
+            st.write(f'{ticker}----{precios_mensuales}')
             open_=data['Open'].resample('M').first()
             close_=data['Close'].resample('M').last()
             vars_usd[ticker]=close_/open_-1
