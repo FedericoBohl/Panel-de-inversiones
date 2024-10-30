@@ -516,10 +516,6 @@ if 'iol' in S:
                                             'yanchor': 'top'}
                                             )
             c2.plotly_chart(fig,use_container_width=True)
-        st.write(var_pond['Portfolio'].max()*0.75*100)
-        st.write(colors)
-        st.write(np.percentile(colors,75)+1.5*(np.percentile(colors,75)-np.percentile(colors,25)))
-        st.write(np.percentile(colors,25)-1.5*(np.percentile(colors,75)-np.percentile(colors,25)))
         
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
