@@ -7,7 +7,3 @@ openpyxl
 yfinance
 bs4
 requests
-seleniumbase
-webdriver-manager
-chromium
-chromedriver
