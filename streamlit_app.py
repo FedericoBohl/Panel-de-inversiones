@@ -316,6 +316,7 @@ def rendimiento_portfolio(now):
         'DIA':20,
         'IWM':10
     }
+    st.write(tickers_usd)
     price_usd=pd.DataFrame(tickers_usd)
     price_usd.index=[x.strftime('%Y-%m') for x in price_usd.index]
     price_usd=price_usd.loc[op_hist.index[0][0]:]
