@@ -516,6 +516,11 @@ if 'iol' in S:
                                             'yanchor': 'top'}
                                             )
             c2.plotly_chart(fig,use_container_width=True)
+        st.write(var_pond['Portfolio'].max()*0.75*100)
+        st.write(colors)
+        st.write(colors.max()*1.25)
+        st.write(colors.min()*0.75)
+        
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
