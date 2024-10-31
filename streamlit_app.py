@@ -523,9 +523,10 @@ if 'iol' in S:
             _now_=S.acciones_now.copy()
             _now_.set_index('simbolo',inplace=True)
             prof_acc=calcular_proffit_acciones(S.operaciones,_now_)
+            prof_acc['TEA']=[(1 + i/100) ** 365 - 1 for i in prof_acc['Ganancia%']]
             c1,c2=st.columns(2)
             fig=go.Figure()
-            fig.add_trace(go.Bar(x=prof_acc['Ganancia%'],y=prof_acc.index,orientation='h',marker_color='#683CFC'))
+            fig.add_trace(go.Bar(x=prof_acc['TEA'],y=prof_acc.index,orientation='h',marker_color='#683CFC'))
             fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
             with c1.container(border=True):
                 c11,c12=st.columns(2)
@@ -535,19 +536,32 @@ if 'iol' in S:
                 for i in range(len(prof_acc)):
                     val+=(prof_acc.iloc[i]['Cantidad']*_now_.loc[prof_acc.index[i],'ultimoPrecio'])
                     proff_av+=(prof_acc.iloc[i]['Ganancia%']*prof_acc.iloc[i]['Cantidad']/tot_ced)
+                proff_av=(1 + proff_av/100) ** 365 - 1
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
+                c12.metric('Promedio TEA(Ganancia Diaria)',f'{round(proff_av,2)}%')
 
-            c1.dataframe(prof_acc.drop(columns=['Ganancia%']),use_container_width=True)
-            c2.subheader('Ganancia diaria promedio')
+            c1.dataframe(prof_acc.drop(columns=['Ganancia%','TEA']),use_container_width=True)
+            c2.subheader('TEA(Ganancia Diaria)')
+            fig.add_vline(proff_av, line_width=3, line_dash="dash", line_color="white")
             c2.plotly_chart(fig,use_container_width=True)
+            df = prof_acc.reset_index().rename(columns={'index': 'ticker'})
+            # Crear boxplot orientado horizontalmente
+            fig = px.box(df, x='TEA', points="all", hover_data={'ticker': True},
+                        labels={'TEA': 'Tasa Efectiva Anual (TEA)'})
+
+            # Invertir el eje x para que vaya de derecha a izquierda
+            fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+            # Personalizar tooltip para mostrar ticker y valor
+            fig.update_traces(marker=dict(size=15,color="#683CFC"), hovertemplate="Ticker: %{customdata[0]}<br>TEA: %{x:.2}%")
+            st.plotly_chart(fig,use_container_width=True)
         with t_ced:
             _now_=S.cedears_now.copy()
             _now_.set_index('simbolo',inplace=True)
             prof_ced=calcular_proffit_cedears(S.operaciones,_now_)
+            prof_ced['TEA']=[(1 + i/100) ** 365 - 1 for i in prof_ced['Ganancia%']]
             c1,c2=st.columns(2)
             fig=go.Figure()
-            fig.add_trace(go.Bar(x=prof_ced['Ganancia%'],y=prof_ced.index,orientation='h',marker_color='#683CFC'))
+            fig.add_trace(go.Bar(x=prof_ced['TEA'],y=prof_ced.index,orientation='h',marker_color='#683CFC'))
             fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
             with c1.container(border=True):
                 c11,c12=st.columns(2)
@@ -557,18 +571,32 @@ if 'iol' in S:
                 for i in range(len(prof_ced)):
                     val+=(prof_ced.iloc[i]['Cantidad']*_now_.loc[prof_ced.index[i],'ultimoPrecio'])
                     proff_av+=(prof_ced.iloc[i]['Ganancia%']*prof_ced.iloc[i]['Cantidad']/tot_ced)
+                proff_av=(1 + proff_av/100) ** 365 - 1
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
-            c1.dataframe(prof_ced.drop(columns=['Ganancia%']),use_container_width=True)
-            c2.subheader('Ganancia diaria promedio')
+                c12.metric('Promedio TEA(Ganancia Diaria)',f'{round(proff_av,2)}%')
+
+            c1.dataframe(prof_ced.drop(columns=['Ganancia%','TEA']),use_container_width=True)
+            c2.subheader('TEA(Ganancia Diaria)')
+            fig.add_vline(proff_av, line_width=3, line_dash="dash", line_color="white")
             c2.plotly_chart(fig,use_container_width=True)
+            df = prof_ced.reset_index().rename(columns={'index': 'ticker'})
+            # Crear boxplot orientado horizontalmente
+            fig = px.box(df, x='TEA', points="all", hover_data={'ticker': True},
+                        labels={'TEA': 'Tasa Efectiva Anual (TEA)'})
+
+            # Invertir el eje x para que vaya de derecha a izquierda
+            fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+            # Personalizar tooltip para mostrar ticker y valor
+            fig.update_traces(marker=dict(size=15,color="#683CFC"), hovertemplate="Ticker: %{customdata[0]}<br>TEA: %{x:.2}%")
+            st.plotly_chart(fig,use_container_width=True)
         with t_bon:
             _now_=S.titpub.copy()
             _now_.set_index('simbolo',inplace=True)
             prof_bonos=calcular_proffit_bonos(S.operaciones,_now_)
+            prof_bonos['TEA']=[(1 + i/100) ** 365 - 1 for i in prof_bonos['Ganancia%']]
             c1,c2=st.columns(2)
             fig=go.Figure()
-            fig.add_trace(go.Bar(x=prof_bonos['Ganancia%'],y=prof_bonos.index,orientation='h',marker_color='#683CFC'))
+            fig.add_trace(go.Bar(x=prof_bonos['TEA'],y=prof_bonos.index,orientation='h',marker_color='#683CFC'))
             fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
             with c1.container(border=True):
                 c11,c12=st.columns(2)
@@ -578,10 +606,13 @@ if 'iol' in S:
                 for i in range(len(prof_bonos)):
                     val+=(prof_bonos.iloc[i]['Cantidad']*_now_.loc[prof_bonos.index[i],'ultimoPrecio'])
                     proff_av+=(prof_bonos.iloc[i]['Ganancia%']*prof_bonos.iloc[i]['Cantidad']/tot_ced)
+                proff_av=(1 + proff_av/100) ** 365 - 1
                 c11.metric('Total valuado',val)
-                c12.metric('Ganancia Diaria Promedio',f'{round(proff_av,2)}%')
-            c1.dataframe(prof_bonos.drop(columns=['Ganancia%']),use_container_width=True)
-            c2.subheader('Ganancia diaria promedio')
+                c12.metric('Promedio TEA(Ganancia Diaria)',f'{round(proff_av,2)}%')
+
+            c1.dataframe(prof_bonos.drop(columns=['Ganancia%','TEA']),use_container_width=True)
+            c2.subheader('TEA(Ganancia Diaria)')
+            fig.add_vline(proff_av, line_width=3, line_dash="dash", line_color="white")
             c2.plotly_chart(fig,use_container_width=True)
 
 else:st.warning('No se ha podido iniciar sesion. Compruebe sus credenciales')
