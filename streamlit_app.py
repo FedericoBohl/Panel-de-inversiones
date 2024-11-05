@@ -329,11 +329,14 @@ def rendimiento_portfolio(now):
         elif col in ratios.index:
             price_usd[col]=price_usd[col]/ratios[col]
     df_val=df_acum.copy()[price_usd.columns]  #CUANDO CONSIGA DATOS DE BONOS DEBERÍA IR "df.columns"
+    st.write(df_val,df_acum,price_usd)
+    
     for col in df_val.columns:
         for ind in df_val.index:
             if ind!=f'{endyear}-{endmonth}':
                 df_val.at[ind,col]=df_acum.at[ind,col]*price_usd.at[ind,col]
     df_val['Portfolio']=[sum(df_val.loc[x]) for x in df_val.index]
+    st.write(df_val)
     vars_usd=pd.DataFrame(vars_usd)
     vars_usd.index=[x.strftime('%Y-%m') for x in vars_usd.index]
     vars_usd=vars_usd.loc[op_hist.index[0][0]:]
