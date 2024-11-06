@@ -318,8 +318,6 @@ def rendimiento_portfolio(now):
         'IWM':10
     }
     price_usd=pd.DataFrame(tickers_usd)
-    endmonth=max(price_usd.index.max().month,int(df_acum.index[-1].split('-')[1]))  if price_usd.index.max().year==int(df_acum.index[-1].split('-')[0]) else 12
-    endyear=min(price_usd.index.max().year,int(df_acum.index[-1].split('-')[0]))
     price_usd.index=[x.strftime('%Y-%m') for x in price_usd.index]
     price_usd=price_usd.loc[op_hist.index[0][0]:]
     price_usd_copy=price_usd.copy()
@@ -328,15 +326,11 @@ def rendimiento_portfolio(now):
             price_usd[col]=price_usd[col]/cantXaccion[col]
         elif col in ratios.index:
             price_usd[col]=price_usd[col]/ratios[col]
-    df_val=df_acum.copy()[price_usd.columns]  #CUANDO CONSIGA DATOS DE BONOS DEBERÍA IR "df.columns"
-    st.write(df_val,df_acum,price_usd)
-    
+    df_val=df_acum.copy()[price_usd.columns]  #CUANDO CONSIGA DATOS DE BONOS DEBERÍA IR "df.columns"    
     for col in df_val.columns:
         for ind in df_val.index:
-            if ind!=f'{endyear}-{endmonth}':
-                df_val.at[ind,col]=df_acum.at[ind,col]*price_usd.at[ind,col]
+            df_val.at[ind,col]=df_acum.at[ind,col]*price_usd.at[ind,col]
     df_val['Portfolio']=[sum(df_val.loc[x]) for x in df_val.index]
-    st.write(df_val)
     vars_usd=pd.DataFrame(vars_usd)
     vars_usd.index=[x.strftime('%Y-%m') for x in vars_usd.index]
     vars_usd=vars_usd.loc[op_hist.index[0][0]:]
@@ -347,16 +341,17 @@ def rendimiento_portfolio(now):
     var_pond=var_pond.drop(columns=['Portfolio'])
     for ind in var_pond.index:
         for col in var_pond.columns:
-            if ind!=f'{endyear}-{endmonth}':
-                var_pond.at[ind,col]*=vars_usd.at[ind,col]
+            var_pond.at[ind,col]*=vars_usd.at[ind,col]
     var_pond['Portfolio']=[sum(var_pond.loc[x]) for x in var_pond.index]
     max_ind=len(spy.index)
     df_val=df_val.iloc[:max_ind]
     var_pond=var_pond.iloc[:max_ind]
     fig=make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(go.Bar(x=df_val.index,y=df_val['Portfolio'],name='Portfolio',marker_color='goldenrod'),secondary_y=False)
-    fig.add_trace(go.Scatter(x=spy.index,y=spy*100,name='SPY',marker_color='royalblue',mode='lines'),secondary_y=True)
-    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Rendimiento Portfolio',marker_color='crimson',mode='lines'),secondary_y=True)
+    fig.add_trace(go.Scatter(x=spy.index,y=spy*100,name='SPY',marker_color='royalblue',mode='lines+markers',legendgroup='spy'),secondary_y=True)
+    fig.add_trace(go.Scatter(x=spy.index,y=spy.rolling(6).mean()*100,name='SPY-rolling',marker_color='royalblue',mode='lines',line=dict(dash='dash',width=0.75),showlegend=False,legendgroup='spy'),secondary_y=True)
+    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Rendimiento Portfolio',marker_color='crimson',mode='lines+markers',legendgroup='portfolio'),secondary_y=True)
+    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio'].rolling(6).mean()*100,name='portfolio-rolling',marker_color='crimson',mode='lines',line=dict(dash='dash',width=0.75),showlegend=False,legendgroup='portfolio'),secondary_y=True)
     fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
     fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
                                         orientation="h",
