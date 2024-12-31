@@ -291,7 +291,7 @@ def rendimiento_portfolio(now):
         row = [cell.get_text(strip=True) for cell in cells]
         if row:  # Ignorar filas vacías
             rows.append(row)
-    ratios=pd.DataFrame(rows,columns=['ticker','nombre','cod bolsa','ratio','ticker-usd','area'])
+    ratios=pd.DataFrame(rows,columns=['ticker','nombre','ratio','ticker-usd','tipo','pais','dividendos','area'])
     ratios['ratio']=[float(x.split(':')[0]) for x in ratios['ratio']]
     ratios.set_index('ticker',inplace=True)
     ratios=ratios['ratio']
