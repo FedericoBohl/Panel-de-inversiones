@@ -4,6 +4,6 @@ numpy
 plotly
 datetime
 openpyxl
-yfinance==0.2.43
+yfinance==0.2.54
 bs4
 requests
