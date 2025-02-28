@@ -17,6 +17,7 @@ from bs4 import BeautifulSoup
 #from webdriver_manager.chrome import ChromeDriverManager
 #from webdriver_manager.core.os_manager import ChromeType
 
+
 from IOL import TokenManager
 
 colorscale = [
@@ -41,7 +42,7 @@ def load_user_IOL(username,password)->TokenManager:
     token_manager = TokenManager(username,password)
     return token_manager
 
-@st.cache_data(show_spinner=False)
+@st.fragment
 def make_acciones(data_now : pd.DataFrame):
     data=pd.read_csv('data_bolsa/bolsa_arg.csv',delimiter=';')
     data_merv=data[data['Merv']==True]
@@ -201,7 +202,7 @@ def calcular_proffit_bonos(his_op,_now_):
     profit_acciones['Monto']=montos
     return profit_acciones[profit_acciones['Cantidad']>0]
 
-#@st.cache_data(show_spinner=False)
+@st.fragment
 def rendimiento_portfolio(now):
     op_hist=S.iol.get_operaciones_hist()
     ratios={'JPM':3,
@@ -247,17 +248,21 @@ def rendimiento_portfolio(now):
     fails=[]
     uniques=op_hist['simbolo'].unique()
     st.divider()
+
     for ticker in uniques:
         try:
-            data = yf.download(ticker if ticker not in tickers.keys() else tickers[ticker], start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d")
+            t=ticker if ticker not in tickers.keys() else tickers[ticker]
+            data = yf.download(t, start="2023-01-01", end=pd.Timestamp.today().strftime('%Y-%m-%d'), interval="1d",auto_adjust=False).xs(key=t, axis=1, level=1)
             precios_mensuales = data['Adj Close'].resample('M').last()
             tickers_usd[ticker]=precios_mensuales
             open_=data['Open'].resample('M').first()
             close_=data['Close'].resample('M').last()
             vars_usd[ticker]=close_/open_-1
-        except:
+        except Exception as e:
             fails.append(ticker)
+            st.exception(e)
             continue
+
     op_hist['fechaOperada']=[x.strftime('%Y-%m')for x in op_hist['fechaOperada']]
     op_hist['cantidadOperada']=[op_hist.loc[x]['cantidadOperada'] if op_hist.loc[x]['tipo']=='Compra' else -op_hist.loc[x]['cantidadOperada'] for x in op_hist.index]
     op_hist=op_hist.groupby(by=['fechaOperada','simbolo'])[['cantidadOperada']].sum()
@@ -330,11 +335,13 @@ def rendimiento_portfolio(now):
     for col in df_val.columns:
         for ind in df_val.index:
             df_val.at[ind,col]=df_acum.at[ind,col]*price_usd.at[ind,col]
-    df_val['Portfolio']=[sum(df_val.loc[x]) for x in df_val.index]
+    df_val['Portfolio']=[sum(df_val.loc[x].dropna()) for x in df_val.index]
     vars_usd=pd.DataFrame(vars_usd)
     vars_usd.index=[x.strftime('%Y-%m') for x in vars_usd.index]
     vars_usd=vars_usd.loc[op_hist.index[0][0]:]
     spy=vars_usd['SPY']
+
+    
     var_pond=df_val.copy()
     for col in var_pond.columns:
         var_pond[col]=var_pond[col]/var_pond['Portfolio']
@@ -342,7 +349,7 @@ def rendimiento_portfolio(now):
     for ind in var_pond.index:
         for col in var_pond.columns:
             var_pond.at[ind,col]*=vars_usd.at[ind,col]
-    var_pond['Portfolio']=[sum(var_pond.loc[x]) for x in var_pond.index]
+    var_pond['Portfolio']=[sum(var_pond.loc[x].dropna()) for x in var_pond.index]
     max_ind=len(spy.index)
     df_val=df_val.iloc[:max_ind]
     var_pond=var_pond.iloc[:max_ind]
@@ -412,114 +419,125 @@ if 'iol' in S:
             S.operaciones=S.iol.get_operaciones(S.acciones_now,S.cedears_now,S.titpub)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
-            c1,c2=st.columns((0.4,0.6))
-            fig = px.sunburst(S.port, path=['tipo', 'simbolo'],
-                       values=S.port['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
-            fig.update_traces(
-            hovertemplate="<br>".join([
-            "<b><b>%{label}",
-            "<b>Valorizado<b>: %{customdata[0]} (%{value}%)",
-            "<b>Variación<b>: %{customdata[1]}%"
-            ])
-            )
-            fig.update_layout(margin=dict(l=1, r=1, t=75, b=1),height=600)
-            c1.plotly_chart(fig,use_container_width=True)
-            with c2:
-                _=round(S.port['gananciaDiariaPonderada'].sum(),2)
-                col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
-                st.header(f"Ganancia de hoy: {col}")
-                c21,c22=st.columns(2)
-                ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
-                fig=go.Figure()
-                try:
-                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
-                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Acciones"},
-                                            domain = {'row': 0, 'column': 0}
+            @st.fragment
+            def make_total():
+                c1,c2=st.columns((0.4,0.6))
+                fig = px.sunburst(S.port, path=['tipo', 'simbolo'],
+                        values=S.port['valorizado%'],custom_data=["valorizado",'variacionDiaria'])
+                fig.update_traces(
+                hovertemplate="<br>".join([
+                "<b><b>%{label}",
+                "<b>Valorizado<b>: %{customdata[0]} (%{value}%)",
+                "<b>Variación<b>: %{customdata[1]}%"
+                ])
+                )
+                fig.update_layout(margin=dict(l=1, r=1, t=75, b=1),height=600)
+                c1.plotly_chart(fig,use_container_width=True)
+                with c2:
+                    _=round(S.port['gananciaDiariaPonderada'].sum(),2)
+                    col=f':green[{_}%]' if _>0 else (f':red[{_}%]' if _<0 else f':gray[{_}%]')
+                    st.header(f"Ganancia de hoy: {col}")
+                    c21,c22=st.columns(2)
+                    ganancia_diaria_por_tipo = S.port.groupby('tipo')['gananciaDiariaPonderada'].sum().tolist()#.reset_index()
+                    fig=go.Figure()
+                    try:
+                        fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[0],
+                                                delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Acciones"},
+                                                domain = {'row': 0, 'column': 0}
+                                                ))
+                    except:pass
+                    try:
+                        fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
+                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Cedears"},
+                                            domain = {'row': 0, 'column': 1}
                                             ))
-                except:pass
-                try:
-                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[2],
-                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Cedears"},
-                                           domain = {'row': 0, 'column': 1}
-                                           ))
-                except:pass
-                try:
-                    fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
-                                           delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Bonos"},
-                                           domain = {'row': 0, 'column': 2}
-                                           ))
-                except:pass
-                try:    fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
-                except:pass
-                fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
-                st.plotly_chart(fig,use_container_width=True)
-                c21.subheader(':green[Top Winners]')
-                for i in S.port.nlargest(3, 'variacionDiaria').values.tolist():
-                    c21.caption(f"* {i[2]}:  {i[0]}%")
-                c22.subheader(':red[Top Losers]')
-                for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
-                    c22.caption(f"* {i[2]}:  {i[0]}%")
-            
-            df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
-            vars_usd.index=pd.to_datetime(vars_usd.index,format="%Y-%m").strftime('%B del %Y')
-            df_val.index=pd.to_datetime(df_val.index,format="%Y-%m").strftime('%B del %Y')
+                    except:pass
+                    try:
+                        fig.add_trace(go.Indicator(mode='delta',value=ganancia_diaria_por_tipo[1],
+                                            delta = {"reference": 0, "valueformat": ".3f",'suffix':'%'},title = {"text": "Bonos"},
+                                            domain = {'row': 0, 'column': 2}
+                                            ))
+                    except:pass
+                    try:    fig.update_layout(grid = {'rows': 1, 'columns': 3, 'pattern': "independent"})
+                    except:pass
+                    fig.update_layout(margin=dict(l=1, r=1, t=1, b=1))
+                    st.plotly_chart(fig,use_container_width=True)
+                    c21.subheader(':green[Top Winners]')
+                    for i in S.port.nlargest(3, 'variacionDiaria').values.tolist():
+                        c21.caption(f"* {i[2]}:  {i[0]}%")
+                    c22.subheader(':red[Top Losers]')
+                    for i in S.port.nsmallest(3, 'variacionDiaria').values.tolist():
+                        c22.caption(f"* {i[2]}:  {i[0]}%")
+                
+                df_val, var_pond,price_usd,vars_usd=rendimiento_portfolio(datetime.now().strftime("%Y-%m-%d"))
+                vars_usd.index=pd.to_datetime(vars_usd.index,format="%Y-%m").strftime('%B del %Y')
+                df_val.index=pd.to_datetime(df_val.index,format="%Y-%m").strftime('%B del %Y')
 
-            c1,c2=st.columns(2)
-            c1.subheader('Analisis por fecha')
-            c1.selectbox('date_selected',label_visibility='collapsed',options=vars_usd.index[::-1],key='date_selected',index=0)
-            valores=vars_usd.loc[S.date_selected].to_dict()
-            _=df_val.copy()
-            for i in _.columns:
-                _[i]=_[i]/_['Portfolio']
-            _.drop(columns=['Portfolio'],inplace=True)
-            ponderaciones=_.loc[S.date_selected].to_dict()    
-            labels = list(valores.keys())
-            sizes = [ponderaciones[s]*100 for s in labels]
-            colors = [valores[s]*100 for s in labels]
-            fig = go.Figure(go.Treemap(
-                labels=labels,
-                parents=[""] * len(labels),  # No hay jerarquía
-                values=sizes,
-                marker=dict(
-                    cmin=np.percentile(colors,25)-1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
-                    cmax=np.percentile(colors,75)+1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
-                    colors=colors,
-                    colorscale='RdYlGn',  # Escala de color de rojo a verde
-                    colorbar=dict(title="Valor")
-                ),
-                hovertemplate='<b>%{label}</b><br>Ponderación: %{value:.2f}%<br>Valor: %{color:.2f}%<extra></extra>'
-            ))
-            fig.update_layout(
-                title=f"Rendimientos en {S.date_selected}",
-            )
-            c1.plotly_chart(fig,use_container_width=True)
-            c2.subheader('Analisis por activo')
-            c2.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
-            fig=go.Figure()
-            fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
-            fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
-            fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd[S.ticker_selected]*100,name=S.ticker_selected,marker_color='crimson',mode='lines'))
-            fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='#C080C0',mode='lines'))
-            fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
-            fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
-                                                orientation="h",
-                                                yanchor="bottom",
-                                                y=-0.2,
-                                                xanchor="center",
-                                                x=0.5,
-                                                bordercolor='black',
-                                                borderwidth=2
-                                            ),
-                                            yaxis=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
-                                            title={
-                                            'text': f"Rendimiento {S.ticker_selected}",
-                                            'y':1,
-                                            'x':0.5,
-                                            'xanchor': 'center',
-                                            'yanchor': 'top'}
-                                            )
-            c2.plotly_chart(fig,use_container_width=True)
-        
+                
+                c1,c2=st.columns(2)
+                @st.fragment
+                def analisis_fecha(vars_usd):
+                    st.subheader('Analisis por fecha')
+                    st.selectbox('date_selected',label_visibility='collapsed',options=vars_usd.index[::-1],key='date_selected',index=0)
+                    valores=vars_usd.loc[S.date_selected].to_dict()
+                    _=df_val.copy()
+                    for i in _.columns:
+                        _[i]=_[i]/_['Portfolio']
+                    _.drop(columns=['Portfolio'],inplace=True)
+                    ponderaciones=_.loc[S.date_selected].to_dict()    
+                    labels = list(valores.keys())
+                    sizes = [ponderaciones[s]*100 for s in labels]
+                    colors = [valores[s]*100 for s in labels]
+                    fig = go.Figure(go.Treemap(
+                        labels=labels,
+                        parents=[""] * len(labels),  # No hay jerarquía
+                        values=sizes,
+                        marker=dict(
+                            cmin=np.percentile(colors,25)-1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
+                            cmax=np.percentile(colors,75)+1.5*(np.percentile(colors,75)-np.percentile(colors,25)),
+                            colors=colors,
+                            colorscale='RdYlGn',  # Escala de color de rojo a verde
+                            colorbar=dict(title="Valor")
+                        ),
+                        hovertemplate='<b>%{label}</b><br>Ponderación: %{value:.2f}%<br>Valor: %{color:.2f}%<extra></extra>'
+                    ))
+                    fig.update_layout(
+                        title=f"Rendimientos en {S.date_selected}",
+                    )
+                    st.plotly_chart(fig,use_container_width=True)
+                with c1: analisis_fecha(vars_usd)
+                
+                @st.fragment
+                def analisis_activo(vars_usd:pd.DataFrame,var_pond):
+                    st.subheader('Analisis por activo')
+                    labels = list(vars_usd.dropna(how='any',axis=1).columns)
+                    st.selectbox('Ticker',label_visibility='collapsed',options=labels,key='ticker_selected')
+                    fig=go.Figure()
+                    fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd['SPY']*100,name='SPY',marker_color='darkgreen',mode='lines',line=dict(width=2)))
+                    fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd['SPY']*0,name='None',showlegend=False,marker_color='mediumspringgreen',mode='none',line=dict(dash='dashdot'),fillcolor='mediumspringgreen',fill='tonexty'))
+                    fig.add_trace(go.Scatter(x=var_pond.index,y=vars_usd[S.ticker_selected]*100,name=S.ticker_selected,marker_color='crimson',mode='lines'))
+                    fig.add_trace(go.Scatter(x=var_pond.index,y=var_pond['Portfolio']*100,name='Portfolio',marker_color='#C080C0',mode='lines'))
+                    fig.add_hline(y=0,line_dash="dot",secondary_y=True,line_color="white",line_width=2)
+                    fig.update_layout(hovermode="x unified", margin=dict(l=1, r=1, t=25, b=1),height=450,bargap=0.2,legend=dict(
+                                                        orientation="h",
+                                                        yanchor="bottom",
+                                                        y=-0.2,
+                                                        xanchor="center",
+                                                        x=0.5,
+                                                        bordercolor='black',
+                                                        borderwidth=2
+                                                    ),
+                                                    yaxis=dict(title='Var. Mensual', side='right',showgrid=True, zeroline=True, showline=True,ticksuffix="%"),
+                                                    title={
+                                                    'text': f"Rendimiento {S.ticker_selected}",
+                                                    'y':1,
+                                                    'x':0.5,
+                                                    'xanchor': 'center',
+                                                    'yanchor': 'top'}
+                                                    )
+                    st.plotly_chart(fig,use_container_width=True)
+                with c2: analisis_activo(vars_usd,var_pond)
+            make_total()
         with t_acc:
             fig,_=make_acciones(data_now=S.acciones_now)
             st.plotly_chart(fig,use_container_width=True)
