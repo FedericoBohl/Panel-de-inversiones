@@ -125,12 +125,18 @@ def calcular_proffit_acciones(his_op,_now):
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = 100*sum(profit_acciones.at[profit_acciones.index[i], 'Ganancia%']) / profit_acciones.at[profit_acciones.index[i], 'Cantidad']
         else:
             profit_acciones.at[profit_acciones.index[i], 'Ganancia%'] = None
-    montos=[S.port[S.port['simbolo']==i].values.tolist()[0][1] for i in profit_acciones.index]
+    montos=[]
+    for i in profit_acciones.index:
+        try:
+            montos.append(S.port[S.port['simbolo']==i].values.tolist()[0][1])
+        except:
+            montos.append(None)
+            continue
     profit_acciones['Monto']=montos
     return profit_acciones.dropna().sort_values(by='Ganancia%', ascending=True)
 
 @st.cache_data(show_spinner=False)
-def calcular_proffit_cedears(his_op,_now):
+def calcular_proffit_cedears(his_op,_now_):
     his_acciones=his_op[his_op['Tipo de Acción']=='Cedear']
     ratios={'JPM':3,
             'AAPL':2,
@@ -171,7 +177,7 @@ def calcular_proffit_cedears(his_op,_now):
 
 @st.cache_data(show_spinner=False)
 def calcular_proffit_bonos(his_op,_now_):
-    his_acciones=his_op[his_op['Tipo de Acción']=='Bono']
+    his_acciones=his_op[his_op['Tipo de Acción'].isin(['Bono', 'Letra'])]
     his_acciones['Precio Ponderado']=his_acciones['Precio Ponderado']/100
     _now_['ultimoPrecio']=_now_['ultimoPrecio']/100
     profit_acciones=pd.DataFrame(index=his_acciones['Simbolo'].unique())
@@ -415,8 +421,9 @@ if 'iol' in S:
             S.acciones_now=S.iol.get_quotes('Acciones')
             S.cedears_now=S.iol.get_quotes('CEDEARs')
             S.titpub=S.iol.get_quotes('titulosPublicos')
+            S.letras=S.iol.get_quotes('Letras')
             S.port=S.iol.get_portfolio()
-            S.operaciones=S.iol.get_operaciones(S.acciones_now,S.cedears_now,S.titpub)
+            S.operaciones=S.iol.get_operaciones(S.acciones_now,S.cedears_now,S.titpub,S.letras)
         t_total,t_acc,t_ced,t_bon=st.tabs(['Total Portafolio','Acciones Argentinas','Cedears','Títulos Públicos'])
         with t_total:
             @st.fragment
@@ -611,7 +618,8 @@ if 'iol' in S:
             fig.update_traces(marker=dict(size=15,color="#683CFC"), hovertemplate="Ticker: %{customdata[0]}<br>TEA: %{x:.2}%")
             st.plotly_chart(fig,use_container_width=True)
         with t_bon:
-            _now_=S.titpub.copy()
+            _now_ = pd.concat([S.titpub, S.letras])
+            
             _now_.set_index('simbolo',inplace=True)
             prof_bonos=calcular_proffit_bonos(S.operaciones,_now_)
             prof_bonos['TEA']=[(1 + i/100) ** 365 - 1 for i in prof_bonos['Ganancia%']]
@@ -631,6 +639,8 @@ if 'iol' in S:
                 c11.metric('Total valuado',val)
                 c12.metric('Promedio TEA(Ganancia Diaria)',f'{round(proff_av,2)}%')
 
+            prof_bonos['Monto'] = prof_bonos['Monto'].apply(lambda x: f"{x:.2f}")
+            prof_bonos['Ganancia'] = prof_bonos['Ganancia'].apply(lambda x: f"{x:.2f}")
             c1.dataframe(prof_bonos.drop(columns=['Ganancia%','TEA']),use_container_width=True)
             c2.subheader('TEA(Ganancia Diaria)')
             fig.add_vline(proff_av, line_width=3, line_dash="dash", line_color="white")
