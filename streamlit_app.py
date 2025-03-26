@@ -33,10 +33,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded")
 
-def load_operaciones(path='Operaciones.xlsx'):
-    df=pd.read_excel(path)
-    return df.sort_values(by='Fecha Liquidación', ascending=True)
-
 @st.cache_data(show_spinner=False)
 def load_user_IOL(username,password)->TokenManager:
     token_manager = TokenManager(username,password)
